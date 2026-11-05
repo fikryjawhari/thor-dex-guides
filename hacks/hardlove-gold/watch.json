@@ -4,8 +4,8 @@
       "name": "Released game source",
       "type": "github",
       "repo": "kumakuma1/hardlove",
-      "ref": "4a8d4a63082176008ccda09214d6341d43674a6a",
-      "baseline_note": "0.8.7 pin: the patch is dated 2026-11-01 (01:21 Drive time, about 08:21 UTC); '27/25% for ai' (this commit, 2026-11-01 08:16 UTC) is the only commit after 0.8.6's 4af49f7 and bumps the in-game 'Current patch version' text to 0.8.7 (data/text/040.txt); fetched with the Drive docs on 2026-11-01.",
+      "ref": "f715235073f9a6ab91be697e277c6c23d9e7caf4",
+      "baseline_note": "0.8.8 pin: the patch is dated 2026-11-02 (Drive, Pacific time; the user saw 2026-11-03 locally, so after 15:37 UTC); 'overhaul trainer' (this commit, 2026-11-02 15:37 UTC) is the last commit before it and includes 'small ai edits / alluring voice' (ee6ccbe, 06:44 UTC). Neither bumps the in-game version text (still 0.8.7); the next commit, cca6bdf (2026-11-04), sets it to 0.8.9. Fetched with the Drive docs on 2026-11-05.",
       "paths": [
         "asm/include/items.inc",
         "asm/include/species.inc",
@@ -35,10 +35,10 @@
         "url": "https://drive.google.com/embeddedfolderview?id=1tBVoMcm-kZdUOWL1yhkxwykvDH5o85C6&hl=en",
         "pattern": "flip-entry-title\">HardloveGold_Demo_([0-9.]+)\\.xdelta",
         "select": "latest",
-        "version": "0.8.7"
+        "version": "0.8.8"
       },
       "state": {
-        "sha": "4a8d4a63082176008ccda09214d6341d43674a6a",
+        "sha": "f715235073f9a6ab91be697e277c6c23d9e7caf4",
         "files": {
           "asm/include/items.inc": "8299aa49b61f2b5aa1e234c9cd95c6918e99318b",
           "asm/include/species.inc": "0776df5d89d605ea6059905c0ae2e840b01bc79d",
@@ -49,11 +49,11 @@
           "data/HiddenAbilityTable.c": "8f6c5f96b2b7235e09ce8a66e6393cb099aa572b",
           "data/HiddenItems.c": "41fe90fc97f4e38a40fd001b118c2bd8e70d95ff",
           "data/MachineMoves.c": "7a15cb0a77757d79aa0578f1ac9921441ad53597",
-          "data/Moves.c": "c43343937dbe4480a503a9a3e88d7e09d1bc8f88",
+          "data/Moves.c": "b9bde1f710ebfc4b464368773e1309db500509ae",
           "data/PokeFormDataTbl.c": "6182520e3febb9eba6a4a05c9ba75b446a575ce6",
           "data/SafariEncounters.c": "dbcede440ddcb1be18671144fc9315e9427c0bb8",
           "data/Species.c": "e965dc63dfd08ed84f9a1075c88515c9a40ceecb",
-          "data/Trainers.c": "79f550953794d343d1c2e8179b450fe0ab3cb578",
+          "data/Trainers.c": "295c11d9dd3be2053e114091732750c0b7634ad3",
           "data/itemdata/itemdata.c": "ee644d63541e267a993bba0350eb5dfa4c45527d",
           "data/learnsets/learnsets.json": "43bb460b41e162f2a32e47bfd845c194a5776928",
           "data/text/keys.csv": "92e03e07ea62ef9814c6f9f14f753f48f921774c",
@@ -72,7 +72,7 @@
       "url": "https://drive.google.com/embeddedfolderview?id=1tBVoMcm-kZdUOWL1yhkxwykvDH5o85C6&hl=en",
       "pattern": "flip-entry-title\">HardloveGold_Demo_([0-9.]+)\\.xdelta",
       "select": "latest",
-      "state": "0.8.7"
+      "state": "0.8.8"
     },
     {
       "name": "Documentation dates (trainer order, splits, locations and AI)",
@@ -81,11 +81,11 @@
       "state": {
         "1AzCc5GglMaKkBWZX1AbR2NmdN8bYStxJ": {
           "name": "Hardlove Gold AI document_WIP.md",
-          "modified": "2026-11-01"
+          "modified": "2026-11-02"
         },
         "1ymB4zPhToZ04xX3cdYSEEGX_D66OIrd9p-krdcafdSM": {
           "name": "Item Location",
-          "modified": "2026-10-24"
+          "modified": "2026-11-05"
         },
         "14ofASQp5NGZZEpqSa-eJfyTPKZIzMdir": {
           "name": "Mechanics.txt",
@@ -93,7 +93,7 @@
         },
         "1tlmV57L8dCQANVsNJrfvqCdfxeuZGN7o0ddZO11L3k4": {
           "name": "Move Changes",
-          "modified": "2026-11-01"
+          "modified": "2026-11-05"
         },
         "1ktoVFo597LeZ4chz07B5KFfeIikKvhozsKq2sFE5EK4": {
           "name": "Move Performance",
@@ -109,7 +109,7 @@
         },
         "1QtkxHFLeb1VVde2LEJiibGFRNoeFFcangj_OuX13OUI": {
           "name": "Trainer Battles",
-          "modified": "2026-11-01"
+          "modified": "2026-11-03"
         }
       },
       "baseline_note": "Seeded current Drive dates 2026-10-24; original modified dates were not saved with the 2026-10-18 downloads."

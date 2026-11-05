@@ -111,12 +111,16 @@ export function IsMoveUsable(state, mon, move, lastMove = facts(mon).lastUsedMov
   if ((input.disabledTurns || input.disabled) && has(move, input.disabledMove)) return false;
   if (input.torment && has(move, lastMove)) return false;
   if ((input.tauntTurns || input.taunted) && has(move.category, 'Status')) return false;
+  if ((input.encoredTurns || input.encored) && !has(move, input.encoredMove ?? lastMove)) return false;
   const choiceMove = input.moveNoChoice ?? input.choiceMove;
   if (choiceMove && !has(choiceMove, 'None')) {
-    if ((input.encoredTurns || input.encored) && !has(move, input.encoredMove ?? lastMove)) return false;
     if (has(BattleAI_GetActiveItem(state, mon), 'Choice Band', 'Choice Scarf', 'Choice Specs') && !has(move, choiceMove)) return false;
   }
   return true;
+}
+
+export function GetCappedDamagePercent(damage, hp) {
+  return Math.min(100, Math.trunc(100 * damage / hp));
 }
 
 export function HasMovePriority(state, attacker, move, defender) {

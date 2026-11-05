@@ -7,6 +7,12 @@ from common import (X, S, SRC, collections, datetime, fid, json, key, lev, note1
 from extractlib import split_name
 
 
+# Sheet trainers the pinned game doesn't have yet (the Drive sheet runs ahead of the release): left out of TR and P,
+# reported in the build report. Remove a name once the pin has that trainer. Ethan / Lyra (Olivine): sheet
+# 2026-11-03, in the game from cca6bdf (0.8.9 dev; at 0.8.8 the sheet's id 214 is Sailor Roberto).
+SHEET_AHEAD = {'Pokémon Trainer Ethan / Lyra'}
+
+
 def gauntlet_rules(group, section):
     """The sheet's Back2Back openers/continuations and explicit gauntlet-note spans."""
     rows = section['tr']
@@ -108,6 +114,9 @@ def sheet(D):
         pass
 
     # species matching for trainers
+    for sp in SPLITS:   # sheet trainers ahead of the pin: their species don't count as trainer-only
+        for s_ in sp['sec']:
+            for t_ in s_['tr']: t_['ahead'] = TAGRE.sub('', t_['n']).strip() in SHEET_AHEAD
     TRONLY = set(); UNT = set(); FZ = set()
     for sp in SPLITS:
         for s_ in sp['sec']:
@@ -152,6 +161,7 @@ def engine(D):
     for sp in SPLITS:
         for s_ in sp['sec']:
             for t_ in s_['tr']:
+                if t_.get('ahead'): continue
                 _, GT = game_trainer(t_['id'], TAGRE.sub('', t_['n']).strip(), [fid(p['f']) for p in t_['p'] if p.get('f')])
                 for m_ in (GT or {}).get('party', []):
                     if not isinstance(m_, dict): continue
@@ -192,6 +202,8 @@ def build(D):
                 if gid_ != t_['id']: TRFIX.append('%s: sheet id %s, game trainer %s' % (name, t_['id'], gid_)); T['id'] = gid_
                 if GT is not None and (gid_, name) in seen_gt:   # the key stays used, so later keys don't move
                     report('trainer listed twice in the sheet, dropped:', k, name, gid_); continue
+                if name in SHEET_AHEAD:   # no trainer key until the game has it
+                    report('sheet trainer not in the pinned game, left out:', k, name, 'id', t_['id'], 'game', (GT or {}).get('name')); continue
                 if GT is not None: seen_gt.add((gid_, name))
                 gp = [m_ for m_ in (GT or {}).get('party', []) if isinstance(m_, dict)]
                 if GT is None: TRSTAT['trainer not in the game data'] += 1; report('trainer not in the game data:', name, t_['id'])

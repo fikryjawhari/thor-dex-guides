@@ -1,8 +1,8 @@
 # Hardlove Gold build notes
 
-Hardlove Gold 0.8.7, an hg-engine hack of Pokémon HeartGold. Built from the hack's own source code (the authority) and
-its sheets. 987 species and forms (596 obtainable, 74 Megas, 317 trainer-only), 783 moves, 284 abilities, 62 tracker
-areas (the Starter area is index 61), 329 trainers in 18 boxes, 94 walkthrough stops.
+Hardlove Gold 0.8.8, an hg-engine hack of Pokémon HeartGold. Built from the hack's own source code (the authority) and
+its sheets. 989 species and forms (596 obtainable, 74 Megas, 319 trainer-only), 785 moves, 285 abilities, 62 tracker
+areas (the Starter area is index 61), 330 trainers in 18 boxes, 94 walkthrough stops.
 
 ## Build
 
@@ -25,7 +25,7 @@ modules are called several times and share the working state `X` (`common.py`). 
 
 Sources (numbered as in SOURCES.md's table):
 
-0. **The hack's source**: github.com/kumakuma1/hardlove, branch `beta_hardlove`, pinned at 0.8.7 `4a8d4a6308`
+0. **The hack's source**: github.com/kumakuma1/hardlove, branch `beta_hardlove`, pinned at 0.8.8 `f715235073`
    (`repos/hardlove/COMMIT`, checked by build.py against `watch.json`). This is what the ROM is built from, so it wins wherever it has the data:
    `data/Species.c` + `HiddenAbilityTable.c` (types, base stats, abilities and hidden abilities of every species and
    form), `data/learnsets/learnsets.json` (level-up, TM, tutor and egg moves; forms without an entry use their base
@@ -204,7 +204,18 @@ Automatic power follows source weight/HP/speed/boost rules: inclusive weight ban
 `floor(48 * HP / maxHP) >= 32`, Gyro Ball without the additive 1, Hard Press at 1 BP at full HP and a late
 zero-power clamp. Weight overrides cover Mega Garchomp Z, Mega Lucario Z and Maushold.
 
-#### Engine changes in 0.8.5 to 0.8.7 the calc does not model
+#### Engine changes in 0.8.5 to 0.8.8
+
+0.8.8 (`4a8d4a6308..f715235073`): trainer AI and two moves. Ported to `template/calc/ai/hardlove/` (fixtures `0.8.8: ...`
+in `tools/calc/hardlove_ai_check.mjs`): Encore restricts usable moves without a Choice lock (`calc.c` `IsMoveUsable`;
+the old doubles fixture now expects no partner ignore), Meteor Beam loses its -20 without Power Herb, Snap Trap scores as
+a binding move, Thunderclap shares Sucker Punch's 50% repeat penalty after either move (the C reads `waza_no_sketch`;
+the calc has one last-used-move input, `facts.lastUsedMove`), Soak / Magic Powder are -20 only on a pure Water / Psychic
+target (`IsPureType`, `other_battle_calculators.c`; no Terastallization in the guide) and Trick-or-Treat / Forest's Curse
+-20 on a target that already has the type (else +6), hard-switch damage percents cap at 100 (`GetCappedDamagePercent`).
+`calcDamage.c` is unchanged (damage compare: 0 unexplained). Data: Alluring Voice is `CONFUSE_HIT` 30% and Snap Trap
+`BIND_HIT` (`MV.aiEffect` / `se` / `f` from `Moves.c`); the damage calc has no confusion or binding damage model, so no
+profile change.
 
 0.8.7 (`4af49f7a8c..4a8d4a6308`): trainer AI only (`src/trainerai/`): the highest-damage / kill bonus is now +2 on 25% of rolls
 (was 20%), Future Sight / Doom Desire +7 (was +8) when the AI is faster and dies, the AI sees a priority move blocked by the
@@ -259,7 +270,7 @@ in play.
 #### Sources and profile
 
 Authority: `kumakuma1/hardlove` at `f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b` (0.8.3) for the traces in this section;
-the guide's data now comes from `4a8d4a6308` (0.8.7): recheck a traced battle file against it when its rule matters.
+the guide's data now comes from `f715235073` (0.8.8): recheck a traced battle file against it when its rule matters.
 The mechanics table's source paths and line numbers refer to that 0.8.3 pin.
 User-supplied notes agree with `doc/Mechanics.txt:5-34`.
 
@@ -486,7 +497,7 @@ UI rules: `template/README.md` → Damage calculator. Here: what feeds the engin
   Derived, not toggles: the calc's Seeded, Focus Energy, Laser Focus, screens, Tailwind, Dig / Fly, Toxic count,
   fainted, Speed (unit 3a).
 
-The trainer AI (`src/trainerai/`, pinned `4a8d4a6308`, fetch: SOURCES.md) is ported headless in
+The trainer AI (`src/trainerai/`, pinned `f715235073` (0.8.8), fetch: SOURCES.md) is ported headless in
 `template/calc/ai/` (plan: `plans/calc-ai.md` in git history). Singles/doubles picks, hard switching and post-KO ranks are headless;
 unit 3 still supplies the guide-data/state adapter, assembly and UI.
 - Layout: `hardlove/damage.mjs` = `calcDamage.c` (the AI's own formula), `speed.mjs` = `calcSpeed.c`, `calc.mjs` =
@@ -548,7 +559,8 @@ Helper/damage review repairs (fixtures in `tools/calc/hardlove_ai_check.mjs`):
   modifiers, while leaving their damage ranges populated. `setupStateVariables.c` overwrites `damageRoll` with
   that return value. Their own rolled outcomes are therefore zero; incoming max-roll tables remain nonzero.
 
-Review completed against pinned `4a8d4a63082176008ccda09214d6341d43674a6a`: `calc.c` (unusual damage,
+Review completed against pinned `4a8d4a63082176008ccda09214d6341d43674a6a` (0.8.7; the 0.8.8 diff is ported on top:
+Damage calc → Engine changes): `calc.c` (unusual damage,
 KO checks, usability, item/priority/grounding helpers and pure Hidden Power/Paradox helpers), `calcSpeed.c`,
 `scoringHelper.c`, and `calcDamage.c`, including their called move-trait and Q4.12 helpers. `main.c` scoring
 deltas, random branches and cases were machine-compared in the initial port. A final comment-stripped table
@@ -715,6 +727,21 @@ earlier data.json, that species order, move / ability tables, area names, traine
 
 ## History
 
+- **2026-11-05, 0.8.8.** Pinned `f715235073` (2026-11-02 15:37 UTC "overhaul trainer", with ee6ccbe "small ai edits /
+  alluring voice"; the patch is dated 2026-11-02 Pacific and was seen 2026-11-03 in the user's time zone, so after this
+  commit; neither commit bumps the in-game version text, still 0.8.7; the next commit, cca6bdf 2026-11-04, sets 0.8.9).
+  Game changes in the data: trainer overhaul (110 trainer cards changed; Rocket Grunt♂ #16 adds Galarian Stunfisk, #21
+  Xatu; Camper Roland is a Youngster), new trainer Roughneck Rodney (Victory Road 1F, key `t329`: Politoed, Kommo-o, Mega
+  Golisopod, Galarian Moltres, Inteleon, Raging Bolt), Alluring Voice 30% confuse, Snap Trap binds. New in the data:
+  Galarian Moltres and Galarian Stunfisk (trainer-only), Fiery Wrath and Snap Trap in `M` (trainer sets), Mimicry in
+  `AB`: they are inserted, not appended, so later `M` / `AB` indices moved; the calc fixtures (`calc_matchups.json`,
+  `calc_states.json`) were remapped by name. AI doc (2026-11-02) updated. **The Drive sheets run ahead of 0.8.8:**
+  Trainer Battles (2026-11-03) adds Ethan / Lyra in Olivine (cca6bdf, 0.8.9 dev; at 0.8.8 its id 214 is Sailor Roberto),
+  left out by `trainers.py` `SHEET_AHEAD` (report: "sheet trainer not in the pinned game"; no key yet); Item Location
+  (2026-11-05) adds the Cerulean berry shop and moves Clefablite / Dragalgite / Golisopite (cca6bdf's `mart.c` and
+  scripts), so the build keeps the 2026-10-24 sheet (copy in the main checkout's `.tmp/hardlove-src-0.8.4/`; the
+  2026-11-05 one is in `.tmp/hardlove-src-0.8.9/`). Sheet conflicts 60 -> 62. Area, stop, pickup and older trainer keys
+  unchanged. Engine / AI changes: Damage calc -> Engine changes.
 - **2026-11-01, 0.8.7.** Pinned `4a8d4a6308` (2026-11-01 08:16 UTC "27/25% for ai", the only commit after 0.8.6 and the one that sets the in-game version text to 0.8.7; the patch went up 2026-11-01 01:21 Drive time; no changelog was found, so this is from the commit). Game changes in the data: Growlithe -> Hisuian Arcanine at level 48 (was 51); Kubfu -> Urshifu now personality form A (both evolutions were form B); Hisuian Sliggoo's level-up moves replaced (Tackle, Bubble, Dragon Breath 5, Life Dew 10, Smart Strike 16 ... Dragon Pulse 55); nine trainer sets now match the sheet (Thom & Kae's Lucario Inner Focus, Grunt #6's Machamp Fire Punch, Deandre's Avalugg Earthquake, Grunt #24's Mew Liquidation, Grunt #25's Greninja Hasty / Liquidation, Night Slash, Gunk Shot and Meowstic Psychic), Fisherman Andre now a double battle in the game (the guide already tagged him Double from the sheet), two trainers' dialogue. Sheet conflicts 65 -> 60. Move Changes sheet (2026-11-01) adds Alluring Voice "Flat 20% chance to confuse." (now a sheet note on the move; `Moves.c` is unchanged). AI doc (2026-11-01): kill / highest-damage odds 75 / 25, Future Sight +7, a Metronome entry. Counts (987 species, 783 moves, 284 abilities), M / AB order, trainer, stop, area and pickup keys unchanged; calc fixtures pass without a remap. Engine changes: Damage calc -> Engine changes.
 - **2026-11-01, 0.8.6.** Pinned `4af49f7a8c` (beta_hardlove head, 2026-10-30 "move ai struct to heap"; the patch is dated 2026-10-30; changelog: AI stack-overflow crashes, a double-faint crash, early game trainers). Game changes in the data: early game trainers (through Morty) reworked: new team members for Benny (Butterfree), Ian (Seviper), Irwin (Maushold), Dirk (Solrock), Krise (Dedenne), Victoria (Mr. Rime), Martha (Scrafty), Falkner's Quaxly now Quaxwell, and moves, natures, items and levels changed on about 20 more early sets plus a few later ones (Randall's Bronzong, Carol's Hariyama, Grunt #34's Dragonite, which now match the sheet); First Impression 100 -> 90. Butterfree and Quaxwell join the data as trainer-only species and Quaxly leaves it (987 species); because the M / AB tables are in first-use order, move and ability indices shifted, so the calc fixtures (`calc_states.json`, `calc_matchups.json`) were remapped by name, and `check.py` with the 0.8.5 baseline stops at its species / table-order asserts by design (saved state stores names). Trainer, stop and area keys unchanged (8 early trainers matched on id with their new teams). Sheet conflicts 64 -> 65 (the Trainer Battles sheet was edited again on 2026-11-01, ahead of the code: Whirl Islands Grunts #24 / #25).
 - **2026-10-29, 0.8.5.** Pinned `64838bf7db` (beta_hardlove head, 2026-10-26; the patch is dated 2026-10-27). Game changes in the data: Tauros learnset (Body Slam 40, Raging Bull 48, Close Combat 55) and the new move Raging Bull (783 moves; it is inserted at guide index 767, so later move indices moved by one: the calc's source fixtures were remapped by name); Ice Path now matches the game (ten stale-sheet warnings gone), Safari Mountain Tauros instead of Furret; Mike's Gouging Fire Protosynthesis; four new sheet conflicts (61 -> 64). Counts, area, item, trainer and stop keys unchanged. The engine changes (Emergency Exit, Eject Pack, hazards + berries, Pastel Veil, Rage Powder, Pluck) are noted under Damage calc; no profile change.

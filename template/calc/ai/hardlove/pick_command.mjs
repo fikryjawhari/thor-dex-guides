@@ -2,6 +2,7 @@ import {Fraction, enumerateDamageScoreGroups, roundedPercentages, scoreLabel} fr
 import {BuildStateVariables} from './state.mjs';
 import {scoreMove} from './scoring.mjs';
 import {BattleAI_PostKOSwitchIn_Internal} from './postKO.mjs';
+import {GetCappedDamagePercent} from './calc.mjs';
 
 const ZERO = new Fraction();
 const ONE = new Fraction(1n);
@@ -21,7 +22,7 @@ export function CalculateSwitch(state, ai) {
   if (ai.attackerPositiveStatChangesSum > 0 || facts.substitute) return ZERO;
   if (!ai.attackerHasValidSwitchingMove) {
     if (ai.attackerMon.percenthp < 67) return ZERO;
-    if (Math.trunc(100 * ai.maxDamageReceived / ai.attackerMon.hp) < Math.trunc(100 * ai.attackerMaxRollDamage / ai.defenderMon.hp)) return ZERO;
+    if (GetCappedDamagePercent(ai.maxDamageReceived, ai.attackerMon.hp) < GetCappedDamagePercent(ai.attackerMaxRollDamage, ai.defenderMon.hp)) return ZERO;
   }
   if (ai.highestPostKoScoreFromParty < 103) return ZERO;
   const addon = ai.isDoubleBattle && state.defender.currentHP > 0 && (state.defenderAlly ?? state.allies?.[1])?.currentHP > 0 ? 3 : 0;

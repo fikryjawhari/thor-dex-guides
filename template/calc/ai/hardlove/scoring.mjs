@@ -746,7 +746,16 @@ function HarassmentScoringPort(battleSystem, attacker, moveIndex, ai)
         }
         break;
     case "CHANGE_TO_WATER_TYPE":
-        if (HasType(context, ai.defender, "WATER")) {
+    case "CHANGE_TO_PSYCHIC_TYPE":
+        if (IsPureType(context, ai.defender, ai.attackerMoveEffect == "CHANGE_TO_WATER_TYPE" ? "WATER" : "PSYCHIC")) {
+            moveScore -= 20;
+        } else {
+            moveScore += 6;
+        }
+        break;
+    case "ADD_TYPE_GHOST":
+    case "ADD_TYPE_GRASS":
+        if (HasType(context, ai.defender, ai.attackerMoveEffect == "ADD_TYPE_GHOST" ? "GHOST" : "GRASS")) {
             moveScore -= 20;
         } else {
             moveScore += 6;
@@ -1418,8 +1427,6 @@ function DamagingMoveScoringPort(battleSystem, attacker, moveIndex, ai)
     case "METEORBEAM":
         if (ai.attackerMon.item == "POWERHERB") {
             moveScore += 9;
-        } else {
-            moveScore -= 20;
         }
         break;
     case "ELECTROSHOT":
@@ -1440,6 +1447,7 @@ function DamagingMoveScoringPort(battleSystem, attacker, moveIndex, ai)
     case "WRAP":
     case "WHIRLPOOL":
     case "INFESTATION":
+    case "SNAPTRAP":
         if (context.binding_turns[ai.defender] != 0 || HasType(context, ai.defender, "GHOST") || ai.defenderMon.item == "SHEDSHELL") {
             moveScore -= 20;
         } else {
@@ -1601,8 +1609,10 @@ function DamagingMoveScoringPort(battleSystem, attacker, moveIndex, ai)
         }
         break;
     }
+    case "THUNDERCLAP":
     case "SUCKERPUNCH": {
-        if (ai.attackerLastUsedMove == "SUCKERPUNCH") {
+        // C reads waza_no_sketch (last move executed); the calc has one last-used-move input
+        if (ai.attackerLastUsedMove == "SUCKERPUNCH" || ai.attackerLastUsedMove == "THUNDERCLAP") {
             if (battleSystem.random(2) == 0) {
                 moveScore -= 20;
             }
@@ -1885,6 +1895,8 @@ function BasicScoringPort(battleSystem, attacker, moveIndex, ai)
 }
 
 const HasType = (context, battler, type) => (context.battlemon[battler].types ?? []).some(name => id(name) === type);
+// other_battle_calculators.c IsPureType: every type is `type` (type1, type2, no type3); no Terastallization here
+const IsPureType = (context, battler, type) => { const types = (context.battlemon[battler].types ?? []).filter(Boolean); return types.length > 0 && types.every(name => id(name) === type); };
 const GetBattlerAbility = (context, battler) => context.battlemon[battler].ability;
 const BattleWorkClientSetMaxGet = battleSystem => battleSystem.sp.ai.isDoubleBattle ? 4 : 2;
 const BATTLER_ALLY = battler => battler ^ 2;

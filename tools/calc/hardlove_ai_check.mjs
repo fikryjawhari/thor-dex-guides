@@ -10,7 +10,7 @@ import * as calc from '../../template/calc/ai/hardlove/calc.mjs';
 import {SOURCE_MOVE_TRAITS} from '../../template/calc/ai/hardlove/damage-data.mjs';
 import * as helpers from '../../template/calc/ai/hardlove/helpers.mjs';
 import {BattleAI_CalcEffectiveSpeed, AI_IsClient2Faster} from '../../template/calc/ai/hardlove/speed.mjs';
-import {BasicScoring, HarassmentScoring, RecoveryScoring, shouldRecover, GetRecoverAmountPercent, ScoreMovesAgainstAlly} from '../../template/calc/ai/hardlove/scoring.mjs';
+import {BasicScoring, DamagingMoveScoring, HarassmentScoring, RecoveryScoring, shouldRecover, GetRecoverAmountPercent, ScoreMovesAgainstAlly} from '../../template/calc/ai/hardlove/scoring.mjs';
 
 const results = [];
 check('review: source punching table deliberately substitutes Growl for Double Shock', () => {
@@ -584,13 +584,13 @@ check('doubles mixture: 10/16 fast KO rolls ignore P0, otherwise slower picks P0
   for (const foe of result.foes) assert.equal(foe.pairs.reduce((total, move) => total + move.percent, 0), 100);
 });
 
-check('C partner-ignore: any OHKO is enough even when Encore picks a non-OHKO attacking move', () => {
+check('C partner-ignore (0.8.8): Encore makes the other moves unusable without a Choice lock, so their OHKO no longer counts', () => {
   const weak = mv('Tackle', 'Normal', 'Physical', 1);
   const state = doubleState({foes: [chomp({moves: [CLAW, weak], facts: {encoredTurns: 1, encoredMove: 'Tackle'}}), chomp({speed: 80, moves: [CLAW]})],
     players: [lax({currentHP: 50}), lax()]});
   const result = evaluateDoubles(state);
-  assert.ok(result.firstBranches.every(branch => branch.index === 1 && branch.ignoredPlayer === 0));
-  assert.equal(result.foes[1].pairs.find(move => move.target.slot === 0).probability, 0);
+  assert.ok(result.firstBranches.every(branch => branch.index === 1 && branch.ignoredPlayer === -1));
+  assert.equal(result.foes[1].pairs.find(move => move.target.slot === 0).probability, 1);
   const onePlayer = evaluateDoubles({...state, players: [state.players[0], lax({currentHP: 0})]});
   assert.ok(onePlayer.firstBranches.every(branch => branch.ignoredPlayer === -1));
 });
@@ -871,6 +871,46 @@ check('singles API: switch and all moves have exact total one and rounded total 
   assert.equal(result.switch.partySlot, 2);
   assert.equal(result.moves[0].percent, 91);
   assert.deepEqual(result.moves[0].exact, {numerator: '91', denominator: '100'});
+});
+
+// 0.8.8 (4a8d4a6308..f715235073): src/trainerai/{main,calc,pick_command}.c
+check('0.8.8: Soak / Magic Powder need a pure type; Trick-or-Treat / Forest\'s Curse any type', () => {
+  const SOAK = mv('Soak', 'Water', 'Status', 0, 'CHANGE_TO_WATER_TYPE');
+  const POWDER = mv('Magic Powder', 'Psychic', 'Status', 0, 'CHANGE_TO_PSYCHIC_TYPE');
+  const TRICK = mv('Trick-or-Treat', 'Ghost', 'Status', 0, 'ADD_TYPE_GHOST');
+  const CURSE = mv("Forest's Curse", 'Grass', 'Status', 0, 'ADD_TYPE_GRASS');
+  assert.deepEqual(scoringBranches(HarassmentScoring, SOAK, {}, {types: ['Water']}), [[-20, '1/1']]);
+  assert.deepEqual(scoringBranches(HarassmentScoring, SOAK, {}, {types: ['Water', 'Ground']}), [[6, '1/1']]);
+  assert.deepEqual(scoringBranches(HarassmentScoring, POWDER, {}, {types: ['Psychic']}), [[-20, '1/1']]);
+  assert.deepEqual(scoringBranches(HarassmentScoring, POWDER, {}, {types: ['Psychic', 'Fairy']}), [[6, '1/1']]);
+  assert.deepEqual(scoringBranches(HarassmentScoring, TRICK, {}, {types: ['Ghost', 'Dark']}), [[-20, '1/1']]);
+  assert.deepEqual(scoringBranches(HarassmentScoring, CURSE, {}, {types: ['Normal']}), [[6, '1/1']]);
+});
+
+check('0.8.8: Meteor Beam has no penalty without Power Herb; Snap Trap scores as a binding move', () => {
+  const BEAM = mv('Meteor Beam', 'Rock', 'Special', 120);
+  const TRAP = mv('Snap Trap', 'Steel', 'Physical', 35, 'BIND_HIT');
+  assert.ok(scoringBranches(DamagingMoveScoring, BEAM).every(([score]) => score > -10));
+  assert.ok(scoringBranches(DamagingMoveScoring, BEAM, {item: 'Power Herb'}).every(([score]) => score >= 9));
+  assert.deepEqual(scoringBranches(DamagingMoveScoring, TRAP, {}, {types: ['Ghost']}).map(([score]) => score), [-20]);
+  assert.deepEqual(scoringBranches(DamagingMoveScoring, TRAP).map(([score, weight]) => `${score}:${weight}`).sort(), ['6:4/5', '8:1/5']);
+});
+
+check('0.8.8: Thunderclap shares Sucker Punch\'s repeat coin, either move last used', () => {
+  const CLAP = mv('Thunderclap', 'Electric', 'Special', 70, 'HIT', {priority: 1});
+  const SUCKER = mv('Sucker Punch', 'Dark', 'Physical', 70, 'HIT', {priority: 1});
+  const penalised = branches => branches.filter(([score]) => score <= -10).reduce((total, [, weight]) => total + Number(weight.split('/')[0]) / Number(weight.split('/')[1]), 0);
+  for (const move of [CLAP, SUCKER]) assert.equal(penalised(scoringBranches(DamagingMoveScoring, move)), 0);
+  for (const [move, last] of [[CLAP, 'Thunderclap'], [CLAP, 'Sucker Punch'], [SUCKER, 'Thunderclap'], [SUCKER, 'Sucker Punch']])
+    assert.equal(penalised(scoringBranches(DamagingMoveScoring, move, {facts: {lastUsedMove: last}})), 1 / 2, `${move.name} after ${last}`);
+});
+
+check('0.8.8: Encore restricts moves without a Choice lock; switch percents cap at 100', () => {
+  const attacker = chomp({facts: {encoredTurns: 2, encoredMove: 'Dragon Claw'}});
+  assert.equal(calc.IsMoveUsable({attacker, defender: lax()}, attacker, EQ), false);
+  assert.equal(calc.IsMoveUsable({attacker, defender: lax()}, attacker, CLAW), true);
+  assert.equal(calc.GetCappedDamagePercent(300, 100), 100);
+  assert.equal(calc.GetCappedDamagePercent(99, 100), 99);
 });
 
 await writeFile(new URL('../../.tmp/ai-engine/results.json', import.meta.url), JSON.stringify({results}, null, 2));

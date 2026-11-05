@@ -195,6 +195,7 @@ def megas(D):
     for sp in SPLITS:
         for s_ in sp['sec']:
             for t_ in s_['tr']:
+                if t_.get('ahead'): continue
                 for p in t_['p']:
                     if 'zam' in p: report('trainer -M species unresolved:', p['s'], p.get('i')); continue
                     if p.get('f') and p['f'] not in OBT: TRONLY.add(p['f'])
