@@ -5,6 +5,12 @@ that section), not the whole file.
 
 ## Recent merges
 
+- **Merged 2026-11-06 from `worktree-guide-adjust`:** walkthrough chips once per slot; cap splits merged (BB2R, Eternal
+  X, Photonic, through `tools/extractlib.py`); Radical Red names and split headers that count stops; EI Rusturf; a
+  Post-game box on Locations (BB2R, RR, Photonic); team-slot drops land on the nearest slot just off the row; the calc's
+  foe panel locked at six rows and the box at three (wide, `template/README.md`), `calc-layout` and `calc-retest` moved
+  to that contract; BB2R's Virbank return is `Virbank City` (`loc` only: 466 trainer keys, none changed); gate default
+  7 jobs. Gate 395/395.
 - **Merged 2026-11-04 from `worktree-encounters`:** the encounter standard on all seven guides (`tools/encstd.py`
   writes `AR.es` / `AR.fo` and the flagged `P.w`; `D.ESV` 2, required by the schema): a card per location, floors in
   one white box, the seven sections by kind code, chips on rates, the grouped tracker picker, the Extra card (`TK.x`).
