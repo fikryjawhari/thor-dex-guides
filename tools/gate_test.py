@@ -1,10 +1,14 @@
 """Unit tests for the gate's helpers: text lint, the Chrome 109 compat lint, accepted data differences, domcompare's build-stamp normalisation.
 uv run python -X utf8 -I tools/gate_test.py"""
+import contextlib
+import io
+import json
 from pathlib import Path
 import subprocess
 import sys
 import tempfile
 import unittest
+from unittest import mock
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / 'tools'))
@@ -188,6 +192,95 @@ class CacheInputs(unittest.TestCase):
     def test_watch_json_does_not_count(self):
         self.assertEqual({path.name for path in gate.hack_inputs(self.root / 'hack')},
                          {'hack.json', 'data.json', 'trainer_keys.json'})
+
+
+class AutoBaseline(unittest.TestCase):
+    """When `check` replaces .tmp/baseline, in a real repository: a1 - a2 (origin/main) - a3 (main), b1 off a2."""
+
+    def setUp(self):
+        temp = tempfile.TemporaryDirectory(ignore_cleanup_errors=True)
+        self.addCleanup(temp.cleanup)
+        self.root = Path(temp.name)
+        self.git('init', '-q', '-b', 'main')
+        self.git('config', 'user.email', 'test@example.invalid')
+        self.git('config', 'user.name', 'test')
+        self.a1, self.a2 = self.commit('a1'), self.commit('a2')
+        self.git('update-ref', 'refs/remotes/origin/main', self.a2)
+        self.a3 = self.commit('a3')
+        self.base = self.root / '.tmp' / 'baseline'
+        self.captured = []
+        for name, value in (('ROOT', self.root), ('BASE', self.base), ('baseline', self.capture)):
+            patcher = mock.patch.object(gate, name, value)
+            patcher.start()
+            self.addCleanup(patcher.stop)
+
+    def git(self, *args):
+        return subprocess.run(['git', *args], cwd=self.root, capture_output=True, text=True, check=True).stdout.strip()
+
+    def commit(self, message):
+        self.git('commit', '-q', '--allow-empty', '-m', message)
+        return self.git('rev-parse', 'HEAD')
+
+    def have(self, sha, keep=False):
+        self.base.mkdir(parents=True, exist_ok=True)
+        (self.base / 'manifest.json').write_text(json.dumps(dict(sha=sha, keep=keep)), encoding='utf-8')
+
+    def capture(self, _gate, ref):
+        self.captured.append(ref)
+        self.have(ref)
+
+    def run_auto(self):
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            ok = gate.auto_baseline(None)
+        return ok, output.getvalue()
+
+    def test_no_baseline_on_main_is_what_is_published(self):
+        self.assertTrue(self.run_auto()[0])
+        self.assertEqual(self.captured, [self.a2])
+
+    def test_stale_on_main_is_replaced_with_a_warning(self):
+        self.have(self.a1)
+        ok, output = self.run_auto()
+        self.assertTrue(ok)
+        self.assertEqual(self.captured, [self.a2])
+        self.assertIn('WARNING', output)
+
+    def test_kept_stays_with_a_warning(self):
+        self.have(self.a1, keep=True)
+        ok, output = self.run_auto()
+        self.assertTrue(ok)
+        self.assertEqual(self.captured, [])
+        self.assertIn('WARNING', output)
+
+    def test_current_and_newer_stay_silent(self):
+        for sha in (self.a2, self.a3):
+            self.have(sha)
+            self.assertEqual(self.run_auto(), (True, ''))
+        self.assertEqual(self.captured, [])
+
+    def test_branch_compares_with_where_it_left_main(self):
+        self.git('checkout', '-q', '-b', 'job', self.a2)
+        job = self.commit('b1')
+        self.have(self.a1)
+        self.run_auto()
+        self.assertEqual(self.captured, [self.a2])
+        self.captured.clear()
+        self.have(job)  # the job's own start commit: newer, stays
+        self.assertEqual(self.run_auto(), (True, ''))
+        self.assertEqual(self.captured, [])
+
+    def test_outside_history_is_replaced(self):
+        self.git('checkout', '-q', '-b', 'job', self.a2)
+        self.have(self.a3)
+        self.run_auto()
+        self.assertEqual(self.captured, [self.a2])
+
+    def test_no_origin_keeps_what_is_there(self):
+        self.git('update-ref', '-d', 'refs/remotes/origin/main')
+        self.have(self.a1)
+        self.assertEqual(self.run_auto(), (True, ''))
+        self.assertEqual(self.captured, [])
 
 
 if __name__ == '__main__':

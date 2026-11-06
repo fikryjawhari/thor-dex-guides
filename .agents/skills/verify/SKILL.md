@@ -39,9 +39,10 @@ Differences the job intended are declared before the run, not read off a failure
 `--accept-routes '[hack:]#/calc'` (domcompare route globs), or the same in `.tmp/accept.json`
 (`tools/README.md` → Standard gates). Anything else that differs still fails, named by path or route; report the
 accepts used. The footer's build date is normalised away.
-The baseline is captured automatically from `git merge-base HEAD main` when there is none or it isn't an ancestor of
-HEAD (the SHA is printed); `gate.py baseline <ref>` pins another one. A baseline older than the branch flags
-everything the branch changed: declare those changes as accepts, or baseline the job's start commit.
+The baseline is captured automatically (the SHA is printed) from `git merge-base HEAD main` on a branch and
+`git merge-base HEAD origin/main` on `main`, when there is none, it isn't an ancestor of HEAD, or it is older than that
+commit (with a `WARNING`; `gate.py baseline <ref> --keep` holds an older one). The baseline flags everything since it:
+declare the job's changes as accepts, or baseline the job's start commit.
 UI changes also end in the Thor frame on the phone preview (`python -X utf8 -I tools/preview.py <page> <name>.html --frame`).
 
 ## 3. A failure

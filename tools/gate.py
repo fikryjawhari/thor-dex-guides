@@ -291,7 +291,7 @@ class Gate:
         return int(bool(self.failed))
 
 
-def baseline(gate, ref):
+def baseline(gate, ref, keep=False):
     sha = subprocess.run(['git', 'rev-parse', '--verify', ref + '^{commit}'], cwd=ROOT,
                          capture_output=True, text=True, check=True).stdout.strip()
     with tempfile.TemporaryDirectory(prefix='baseline-', dir=ROOT / '.tmp') as temporary:
@@ -317,7 +317,7 @@ def baseline(gate, ref):
                 shutil.copyfile(report, destination / 'extract' / 'report.txt')
         hashes = {path.relative_to(output).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
                   for path in output.rglob('*') if path.is_file()}
-        (output / 'manifest.json').write_text(json.dumps(dict(ref=ref, sha=sha, guides=names, hashes=hashes,
+        (output / 'manifest.json').write_text(json.dumps(dict(ref=ref, sha=sha, keep=keep, guides=names, hashes=hashes,
             created=datetime.datetime.now(datetime.timezone.utc).isoformat()), indent=2) + '\n', encoding='utf-8')
         if BASE.exists():
             if BASE.is_symlink() or BASE.resolve().parent != (ROOT / '.tmp').resolve():
@@ -327,19 +327,45 @@ def baseline(gate, ref):
         gate.result('baseline', True, f'{ref} {sha}; {len(names)} guides; git archive; {BASE.relative_to(ROOT)}')
 
 
+def git_out(*args):
+    """A git command's stdout, or None when it fails (an unknown ref, no origin)."""
+    done = subprocess.run(['git', *args], cwd=ROOT, capture_output=True, text=True)
+    return done.stdout.strip() if done.returncode == 0 else None
+
+
+def is_ancestor(older, newer):
+    return subprocess.run(['git', 'merge-base', '--is-ancestor', older, newer], cwd=ROOT,
+                          capture_output=True).returncode == 0
+
+
+def expected_baseline():
+    """(commit, its name) a check compares with: on main what's published, on a branch where it left main."""
+    other = 'origin/main' if git_out('rev-parse', 'HEAD') == git_out('rev-parse', 'main') else 'main'
+    return git_out('merge-base', 'HEAD', other), f'merge-base HEAD {other}'
+
+
 def auto_baseline(gate):
-    """No baseline, or one whose commit isn't in HEAD's history: capture `git merge-base HEAD main` first."""
+    """No baseline, one outside HEAD's history, or one older than the expected commit (it would flag changes already
+    in that commit as this job's): capture the expected commit first. `baseline <ref> --keep` only warns on the last."""
     manifest = BASE / 'manifest.json'
+    base, name = expected_baseline()
     why = 'no baseline'
     if manifest.exists():
-        sha = load(manifest).get('sha', '')
-        ancestor = subprocess.run(['git', 'merge-base', '--is-ancestor', sha, 'HEAD'], cwd=ROOT, capture_output=True)
-        if ancestor.returncode == 0:
+        kept = load(manifest)
+        sha = kept.get('sha', '')
+        if not is_ancestor(sha, 'HEAD'):
+            why = f'baseline {sha[:12]} is not an ancestor of HEAD'
+        elif not base or sha == base or not is_ancestor(sha, base):
             return True
-        why = f'baseline {sha[:12]} is not an ancestor of HEAD'
-    base = subprocess.run(['git', 'merge-base', 'HEAD', 'main'], cwd=ROOT, capture_output=True, text=True,
-                          check=True).stdout.strip()
-    print(f'Auto-baseline: {why}; capturing merge-base HEAD main = {base}', flush=True)
+        elif kept.get('keep'):
+            print(f'WARNING: kept baseline {sha[:12]} is older than {name} = {base[:12]}: changes between them count '
+                  'as this job\'s', flush=True)
+            return True
+        else:
+            why = f'WARNING: baseline {sha[:12]} is older than {name}, replacing it'
+    if not base:
+        base, name = git_out('merge-base', 'HEAD', 'main'), 'merge-base HEAD main'
+    print(f'Auto-baseline: {why}; capturing {name} = {base}', flush=True)
     baseline(gate, base)
     return manifest.exists() and load(manifest).get('sha') == base
 
@@ -485,6 +511,7 @@ def main():
     commands = parser.add_subparsers(dest='command', required=True)
     capture = commands.add_parser('baseline')
     capture.add_argument('ref', nargs='?', default='main')
+    capture.add_argument('--keep', action='store_true', help='check warns instead of replacing it once it is out of date')
     check = commands.add_parser('check')
     check.add_argument('hacks', nargs='*')
     check.add_argument('--data', action='store_true')
@@ -506,7 +533,7 @@ def main():
     gate = Gate(getattr(args, 'fresh', False))
     try:
         if args.command == 'baseline':
-            baseline(gate, args.ref)
+            baseline(gate, args.ref, args.keep)
         elif args.command == 'lint':
             lint_check(gate, args.fix)
             compat_check(gate)

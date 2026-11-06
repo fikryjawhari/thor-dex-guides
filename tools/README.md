@@ -19,7 +19,7 @@ it on a bare runner. `pdftotext` (Git for Windows ships it) is also used.
 | Script | What it does |
 | --- | --- |
 | `new_hack.py <hack> --like <built hack> [--title name] [--version N] [--ls-prefix prefix] [--dry-run] [--force]` | Stdlib scaffold: config, notes / source headings, empty sprites, extract modules / check, gate rebuild and calc scenario / engine-check stubs. No data or other hack's mechanics / fixtures; calc off. Details below. |
-| `gate.py baseline [ref]` / `check [hack ...] [--data] [--template] [--jobs N] [--fresh] [--accept-data S] [--accept-routes S]` / `lint [--fix]` / `scenarios [hack ...] [--only a,b] [--jobs N] [--fresh]` | Captures committed HTML/data/reports at a ref; rebuilds data, then runs every browser check (DOM, consistency, walk-state, mockup checks, scenarios) on every named guide, N at a time (default 7), failures rerun alone, passes cached by content. `scenarios` runs only `scenarios/` on the built dist (no rebuild or baseline), `--only` some of them by name. Stdlib orchestration; run with `uv run python -I`. Standard gates below. |
+| `gate.py baseline [ref] [--keep]` / `check [hack ...] [--data] [--template] [--jobs N] [--fresh] [--accept-data S] [--accept-routes S]` / `lint [--fix]` / `scenarios [hack ...] [--only a,b] [--jobs N] [--fresh]` | Captures committed HTML/data/reports at a ref; rebuilds data, then runs every browser check (DOM, consistency, walk-state, mockup checks, scenarios) on every named guide, N at a time (default 7), failures rerun alone, passes cached by content. `scenarios` runs only `scenarios/` on the built dist (no rebuild or baseline), `--only` some of them by name. Stdlib orchestration; run with `uv run python -I`. Standard gates below. |
 | `worktree_setup.py [hack ...] [--session name] [--release]` | Claims a worker checkout, links `.src/` and the main checkout's `.tmp/item-icons/` cache when present (Windows junctions, no copying), then `uv sync`, and `npm ci` for `tools/calc` when its lockfile is there but `node_modules` isn't (log `.tmp/worktree-setup-npm.log`); no hacks means every built guide. Refuses other claims or existing source/cache copies. Release removes only the matching claim. |
 | `scenarios/tracker-reload.mjs <guide.html>` | Seeded tracker state, Clear and reload at 260 × 316 in `dvkb`; assertions on the control and saved state. `scenarios/README.md` describes new spec checks. |
 | `scenarios/calc-*.mjs <guide.html>` | Calc page checks: layout, controls, state, import/bridge, mechanics and per-hack fields. Coverage, sizes and failure output: `scenarios/README.md` → Calc checks. |
@@ -155,8 +155,11 @@ C0 control bytes other than tab and newline (NUL, ESC, a lone CR, DEL), each nam
 the gate before anything slow. `--fix` rewrites CRLF to LF and drops BOMs; control bytes are fixed by hand (a raw one
 in a JS / Python string is usually a missing escape).
 
-**Auto-baseline**: `check` with no `.tmp/baseline`, or one whose SHA isn't an ancestor of HEAD, first captures
-`git merge-base HEAD main` and prints the SHA. An explicit `baseline <ref>` still wins while it is an ancestor.
+**Auto-baseline**: `check` first captures the expected commit and prints its SHA when there is no `.tmp/baseline`, when
+the baseline isn't an ancestor of HEAD, or when it is older than the expected commit (a `WARNING` line: it would flag
+changes already there as this job's). Expected: on `main`, `git merge-base HEAD origin/main` (what's published); on a
+branch, `git merge-base HEAD main`. A baseline newer than that stays. `baseline <ref> --keep` holds an older one on
+purpose: `check` warns and doesn't replace it.
 
 **Accepts** (`gateaccept.py`): a job's intended changes are declared, not hand-diffed or hidden with a new baseline.
 - `--accept-data <spec>`: a comma list of `[hack:]path`; `path` is keys joined by `.`, `[]` for any list index, `*`
