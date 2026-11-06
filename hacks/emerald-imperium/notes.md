@@ -459,6 +459,8 @@ against the previous build, and the viewer-size checks (CLAUDE.md).
 
 ## History
 
+- 2026-11-06 (the user): Rusturf Tunnel on the way (key 0.12) is the last stop of Roxanne's split; the grunt's visit stays in Rustboro Rival.
+
 - **2026-10-24:** Walkthrough regrouped into the Trainers page's 20 boxes, retaining persistent stop keys.
 - **2026-10-23:** Shared item standard; 1,275 → 1,208 species under the obtainable/trainer-used rule, saved IDs preserved.
 - **2026-10-20:** Hatch-town slots, Gardenia in the Wattson split, town gift houses and shop sub-headings added.

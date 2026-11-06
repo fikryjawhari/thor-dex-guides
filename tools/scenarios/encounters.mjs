@@ -8,6 +8,9 @@
 //   e3 old saves: a tracker save from before the standard (no x) loads unchanged; open sections saved by the old
 //      section names ('area.place.Grass') open the same section by code; other names drop.
 //   e4 split slots: a published slot split by species (AR.to) moves its entry, or keeps it as "also:".
+//   e5 chips once: a walkthrough stop listing several floors of one merged slot shows that slot's encounter once.
+//   e6 post-game box (cfg.locPost): places first reached in a Post-game split wait behind one box; search and a place
+//      link reach them; Expand all leaves them shut.
 import assert from 'node:assert/strict';
 import { SIZE_SMALL, guideArg, readGuide, runChecks } from '../calc_check_lib.mjs';
 
@@ -29,6 +32,13 @@ const FLOORS = slots.find(a => (AR[a].fo || []).length > 1);
 const species = slots.length ? AR[slots[0]].es[0].g[0].rows[0].p : null;
 const nameOf = id => data.P.find(p => p.id === id)?.n;
 
+// A stop listing two floors of one merged slot (e5).
+const slotIn = a => (AR[a].in != null && AR[AR[a].in] && !AR[AR[a].in].sub ? AR[a].in : a);
+const TWICE = (data.WK?.splits || []).flatMap((sp, si) => sp.st.flatMap((s, ti) => {
+  const seen = new Set();
+  return s.a.flatMap(a => { const x = slotIn(a); if (seen.has(x) && AR[x].es && !AR[x].sub) return [[si, ti, x]]; seen.add(x); return []; });
+}))[0];
+
 const openCard = a => `(async()=>{const d=document.querySelector('details.split[data-a="${a}"]');if(!d.open){d.open=true;await new Promise(r=>setTimeout(r,150));}return !!d.querySelector('.stop');})()`;
 
 const checks = [
@@ -38,7 +48,7 @@ const checks = [
     skip, sizes: SIZE_SMALL, modes: ['normal'],
     run: async page => {
       await page.route('#/locs');
-      const cards = await page.value(`[...document.querySelectorAll('#app>details.split[data-a]')].map(d=>d.dataset.a)`);
+      const cards = await page.value(`[...document.querySelectorAll('#app details.split[data-a]')].map(d=>d.dataset.a)`);
       assert.equal(cards.at(-1), 'x', 'the Extra card is last');
       assert.equal(new Set(cards).size, cards.length, 'a card per location, never twice');
       assert.ok(!cards.some(a => a !== 'x' && AR[a].in != null && !AR[a].card), 'merged members have no card (unless AR.card)');
@@ -165,6 +175,51 @@ const checks = [
       await page.value(openCard(d));
       assert.ok(await page.value(`[...document.querySelectorAll('details.split[data-a="${d}"] .tk-also')].some(e=>e.textContent.includes(${JSON.stringify(nameOf(x))}))`),
         `${AR[d].n}: "also: ${nameOf(x)}"`);
+    },
+  },
+  {
+    id: 'e5 chips once',
+    title: 'a stop listing several floors of one slot shows its encounter once',
+    skip: skip || (TWICE ? undefined : 'no stop lists two floors of a slot'), sizes: SIZE_SMALL, modes: ['normal'],
+    run: async page => {
+      const [si, ti, slot] = TWICE;
+      const p = AR[slot].es?.[0]?.g[0].rows[0].p;
+      await page.value(`localStorage.setItem(LS.track,${JSON.stringify(JSON.stringify({ s: '', pl: '', e: { [slot]: { p: nameOf(p) } }, t: {} }))})`);
+      await page.reload();
+      await page.route('#/walk');
+      await page.value(`(async()=>{const d=document.querySelector('details.split[data-wo="${si}"]');d.open=true;await new Promise(r=>setTimeout(r,200));})()`);
+      const tags = await page.value(`[...document.querySelector('details.stopd[data-k="${si}.${ti}"]>summary').querySelectorAll('.tag.got')].map(e=>e.textContent)`);
+      assert.deepEqual(tags, [nameOf(p)], `${data.WK.splits[si].st[ti].n}: one chip`);
+    },
+  },
+  {
+    id: 'e6 post-game box',
+    title: 'post-game places behind one box; search and place links reach them',
+    skip: skip || (data.cfg?.locPost ? undefined : 'no cfg.locPost'), sizes: SIZE_SMALL, modes: ['normal'],
+    run: async page => {
+      await page.route('#/locs');
+      const state = () => page.value(`({hidden:document.querySelector('.pgb').hidden,top:[...document.querySelectorAll('#app>details.split[data-a]')].map(d=>d.dataset.a),inside:[...document.querySelectorAll('.pgb>details.split[data-a]')].map(d=>d.dataset.a)})`);
+      const first = await state();
+      assert.ok(first.hidden, 'the box starts shut');
+      assert.ok(first.inside.length > 0, 'it holds places');
+      assert.ok(!first.top.some(a => first.inside.includes(a)), 'a place is in one list');
+      assert.equal(first.top.at(-1), 'x', 'Extra stays last');
+      await page.value(`document.querySelector('.seg.all>[data-a="1"]').click()`);
+      await page.settle();
+      assert.ok(await page.value(`[...document.querySelectorAll('.pgb details.split')].every(d=>!d.open)`), 'Expand all leaves them shut');
+      await page.value(`document.querySelector('.seg.all>[data-a="0"]').click()`);
+      await page.value(`document.querySelector('details.pgw').open=true`);
+      await page.settle();
+      assert.equal((await state()).hidden, false, 'opening the box shows them');
+      await page.reload();
+      await page.route('#/locs');
+      assert.equal((await state()).hidden, false, 'its open state is saved');
+      await page.value(`document.querySelector('details.pgw').open=false`);
+      await page.settle();
+      const name = AR[first.inside[0]].n;
+      await page.value(`location.hash='#/l/'+LOC.indexOf(LOC.find(x=>AR[${first.inside[0]}].l.some(l=>LOC[l]===x)))`);
+      await page.settle();
+      assert.ok(await page.value(`document.querySelector('details.split[data-a="${first.inside[0]}"]').open&&!document.querySelector('.pgb').hidden`), `a link to ${name} opens the box`);
     },
   },
 ];

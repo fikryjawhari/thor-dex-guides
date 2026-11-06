@@ -30,7 +30,8 @@ from link (same library id, saved state kept).
    sprites as CSS classes, gauntlet carry, Find trainer by location, Hardlove's AI odds / switch-ins / Field → AI:
    `hacks/hardlove-gold/notes.md` → In-game tests). Calc tests seen on the Thor before 2026-11-03 were on a broken
    layout (Chrome 109 dropped `@scope`, fixed): redo them after updating each guide.
-2. Real save tests: one real import per guide on the Thor, compared with PKHeX.
+2. Real save tests: one real import per guide on the Thor, compared with PKHeX (the user 2026-11-06: Hardlove, Radical Red, EI read
+   properly on the Thor; PKHeX comparison, and BB2R, Unbound, Photonic, Eternal X still open).
 3. Footer credits: `cfg.credit` hook exists, no guide sets it. Agreed, not done.
 4. Skill re-upload once its references cover the item pages (5).
 5. New-guide scaffold for the item data (`tools/new_hack.py` stubs).
@@ -44,10 +45,10 @@ from link (same library id, saved state kept).
 
 ## Next session
 
-- **Encounters (Open 12):** branch `worktree-encounters` (worktree `.claude/worktrees/encounters`), not merged; Eternal X
-  in the standard, the other six unchanged (domcompare: identical). Next: the guides session from the plan, each guide
-  a tab branch `worktree-encounters-<hack>` off it. Phone preview: `encounters-eternal-x.html`.
-
+- **Guide adjustments (2026-11-06):** branch `worktree-guide-adjust`, not merged: walkthrough chips once per slot, team-slot drop
+  tolerance, cap splits merged (BB2R, Eternal X, Photonic), RR names, EI Rusturf, Post-game box on Locations (BB2R, RR). Waiting on the
+  user: lock the calc's foe panel at 6 rows or not (3 box rows always, against 3.25 / 4.3 on the Thor now), and whether to build save-based
+  encounter tracking. Then the full gate (accepts first), merge, ask before pushing.
 - **Not pushed (2026-11-06):** `main` holds Hardlove 0.8.9 and the narrower gate cache key. The user holds the push until
   a walkthrough-tab issue they'll raise in a new session is resolved. The new key makes the next full gate miss the cache
   once (about 29 min).

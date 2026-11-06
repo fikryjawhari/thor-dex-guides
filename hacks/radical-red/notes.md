@@ -640,4 +640,6 @@ Fill sources/watch.json, version/mode, GID/save reader and sprite additions by h
 
 ## History
 
+- 2026-11-06 (the user): shown names lose `Pre-` (`tools/splits.py`; Pre-Elite 4 is the standard Elite Four); `trainers.SPLITS` and these notes keep the sheet's names. Locations: Post-game box (`cfg.locPost`).
+
 TODO: document history.

@@ -210,7 +210,7 @@ const BOX = i => `.mg .dstrip:not(.dteamrow) button[data-a=mpick][data-src=party
 const SLOT = n => `.dteamrow button[data-t="${n}"]`;
 const teamOf = page => page.value('CALC.team().map(x=>x.src+":"+x.pid)');
 
-async function drag(page, from, to) {
+async function drag(page, from, to, dx = 0) {
   await page.value(`document.querySelector(${JSON.stringify(from)})?.scrollIntoView({block:'center'})`);
   await page.settle();
   const start = await page.value(SPOT(from));
@@ -221,11 +221,13 @@ async function drag(page, from, to) {
   for (let step = 0; ; step++) {
     let t = await page.value(SPOT(to));
     assert.ok(t, `drag target ${to} is drawn`);
+    t.x += dx;
     if (t.ok && step) {
       // the page was scrolling: stop it (a move out of the edges) and measure the target again
       await touchAt(page, 'touchMove', start.x, height / 2);
       await sleep(80);
       t = await page.value(SPOT(to));
+      t.x += dx;
     }
     if (t.ok) {
       await touchAt(page, 'touchMove', (start.x + t.x) / 2, (start.y + t.y) / 2);
@@ -284,6 +286,10 @@ async function dragCheck(page) {
   await page.tap(SLOT(0));
   const sent = await page.value(`(()=>{const s=CALC.state().mine,t=CALC.team()[0];return{got:{src:s.src,b:s.b,i:s.i},want:{src:t.src,b:t.b,i:t.i}};})()`);
   assert.deepEqual(sent.got, sent.want, 'a tap on a team cell sends that Pokémon in');
+  // The last slot sits against the divider: a finger just past it (over the foe's panel) still drops on it.
+  const past = await page.value(`document.querySelector(${JSON.stringify(SLOT(5))}).getBoundingClientRect().width/2+12`);
+  await drag(page, BOX(4), SLOT(5), past);
+  await want(['party:2', 'party:4'], 'a drop just past the last slot lands on it');
 }
 
 // A foe Pokémon dropped on my team becomes one custom copy (pid f:<trainer>:<slot>); a partner ([P]) follows its multi.

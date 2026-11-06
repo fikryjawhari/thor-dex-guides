@@ -544,6 +544,8 @@ or claim those unresolved catalogue names have proven hack game IDs.
 
 ## History
 
+- 2026-11-06 (the user): caps only for gym leaders and the Elite Four (`walk.regroup`, `extractlib.merge_cap_splits`): 9 cap splits + Post-game; the source's 21 stay in `trainers.CAPS` and the report, the others join the next kept split. Iris is in the Elite Four split (cap 79): you enter at that level and level freely inside. The Brycen return stop is Virbank City (key 2.1). Locations: Post-game box (`cfg.locPost`). Stops keep first-build keys; Victory Road 19.0 and League 20.0 joined 18.1 and 19.1.
+
 2026-10-29: dex unit: `tools/drayano.py`, `tools/romhackdex.py`, `extract/dex.py`; P 671, M 577, AB 166. The
 scaffold's `cfg.calc: false` made `assemble.py` fail (any calc key turned the calc on); it now needs a truthy one.
 2026-10-29: scaffold from Hardlove Gold with tools/new_hack.py; prefix bb2r, calc disabled, no data.json.

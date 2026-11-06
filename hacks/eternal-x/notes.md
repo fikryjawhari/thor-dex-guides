@@ -235,6 +235,8 @@ missing ones), `tools/domcompare.mjs` against the previous build, and the viewer
 
 ## History
 
+- 2026-11-06 (the user): caps only for gym leaders and the Elite Four (`walk.regroup`, `extractlib.merge_cap_splits`): 9 cap splits + Post-game. Places' cap lines count the battles to the kept cap; stops keep their keys.
+
 - **2026-10-24:** Poké Radar, Lysandre's King's Rock and Sycamore's Kanto Mega Stone gifts relabelled `Also:`.
 - **2026-10-23:** Shared item standard: Mega Stones / Drives / HMs refiled, Exp. Share kept only in Key Items.
 - **2026-10-23:** 786 → 782 species; Key Items 33 → 28; cap regroup preserved trainer/area IDs and storage keys.
