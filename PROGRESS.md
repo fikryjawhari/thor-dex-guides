@@ -48,8 +48,12 @@ from link (same library id, saved state kept).
   in the standard, the other six unchanged (domcompare: identical). Next: the guides session from the plan, each guide
   a tab branch `worktree-encounters-<hack>` off it. Phone preview: `encounters-eternal-x.html`.
 
+- **Not pushed (2026-11-06):** `main` holds Hardlove 0.8.9 and the narrower gate cache key. The user holds the push until
+  a walkthrough-tab issue they'll raise in a new session is resolved. The new key makes the next full gate miss the cache
+  once (about 29 min).
 - **Hardlove Gold 0.8.9** (2026-11-06): Ethan / Lyra, Cerulean berries (Natural Gift in the calc and AI), primal weather
   stays, AI port (`hacks/hardlove-gold/notes.md` → History, Engine changes). Update the guide on the Thor (Open 1).
+- **Game-specific code outside the template:** proposal in `plans/hack-extensions.md`, undecided; after the walkthrough fix.
 - **Pushed (2026-11-04):** one calc button per trainer, and the encounter standard on every guide. Update each guide
   on the Thor (Open 1).
 - **Calc plans done** (merged 2026-11-03): gauntlet carry (every guide with chains), Hardlove AI (odds, switch-ins,

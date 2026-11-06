@@ -120,7 +120,7 @@ Write a family's first guide with its siblings in mind; lift shared code when th
    SoulGold's data files changed since 2026-10-24 (re-fetch before its guide). hzla's live `decomp` branch differs from
    Unbound's pin in `gen789.js` (pin kept). Heartfelt Gold is at 1.0.7 (sources at 1.0.0; no guide yet). Emerald
    Imperium's 1.3.1 Changes sheet has a new date (2026-11-02) but identical cells, and the hzla diff is an unrelated
-   alias, so its guide needs nothing; state not accepted, so the check still reports it.
+   alias: accepted, its guide needs nothing.
 8. **Small data leftovers:** item icons missing (no pinned art): Unbound 19 (key items, Costume Box), Radical Red
    17, Hardlove 1 (Pokégear Upgrade 1), BB2R 1; tutor cards are
    parsed from each row's " · " text (structured tutor fields from the extracts would be sturdier); a `nomerge` flag

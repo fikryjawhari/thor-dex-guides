@@ -11,7 +11,7 @@
         },
         "1I23lskt92VetNFBGnhQEoveSiJjwHVtysYQHGKAsadQ": {
           "name": "1.3.1 Emerald Imperium Changes (Stats, Types, Abilities, Moves)",
-          "modified": "2026-05-19"
+          "modified": "2026-11-02"
         },
         "1A9iN3N2bZ8-0YCVrhfeZ0qo2runkbHd-HCgaH_TVyr4": {
           "name": "Boss Battles",
@@ -89,10 +89,10 @@
         "backups/title_to_backup_mappings.js"
       ],
       "state": {
-        "sha": "2a54a6d9ce708a7870c16bcb5cf751c263e477a2",
+        "sha": "ea7e2b1577dbb25e249241dd36336ed8bb56c630",
         "files": {
           "backups/imp_1-3.js": "68619e23ae3408e306e415efdbe7929508a42cdf",
-          "backups/title_to_backup_mappings.js": "ca6e4adec85a1c7776cc8814497fe5c8a29b4a9d"
+          "backups/title_to_backup_mappings.js": "5630f4cce0260efb829fbdcd843c426821338be9"
         }
       }
     },

@@ -5,7 +5,7 @@ Git worktree registration changes, and no raw sources are needed.
 Browser checks (domcompare, consistency, walk-state, the mockup checks, scenarios) run --jobs N at once
 (default 8); a check that fails in the pool is rerun alone once, and passes then only as a timing flake.
 Result cache: a browser check that passed is skipped while its inputs are byte-identical (the guide's dist and
-JSON files, the check script and what it imports, template/, fixtures, the frame, Chrome and Node): one cache
+JSON files, the check script and what it imports, the template parts it can reach, fixtures, the frame, Chrome and Node): one cache
 in the main checkout's .tmp/check-cache, shared by every worktree. --fresh ignores it (still records passes).
 `scenarios` runs only tools/scenarios/ on the built dist (no rebuild, no baseline):
 --only names some of them (comma-separated stems, e.g. calc-layout,calc-controls).
@@ -45,7 +45,7 @@ REBUILDS = {
 BROWSER_CHECK = r'(domcompare|consistency-check|walk-state-check|jumpcheck|zoomcheck|scenarios[/\\][^ ]+)\.mjs'
 # Inputs every browser check may read besides its own scripts and the guide (readGuide's EI save tables, the
 # injected test reader, the frame, save fixtures).
-SHARED_INPUTS = ['template', 'tools/scenarios/fixtures', 'tools/mockup/thor-frame', 'hacks/emerald-imperium/data.json']
+SHARED_INPUTS = ['tools/scenarios/fixtures','tools/mockup/thor-frame', 'hacks/emerald-imperium/data.json']
 # Python children: UTF-8 I/O whatever the console code page (-I ignores PYTHONUTF8 / PYTHONIOENCODING, and a
 # redirected cp1252 stdout crashed on a species name such as Nidoran♂).
 PY = [sys.executable, '-X', 'utf8']
@@ -56,6 +56,34 @@ def main_checkout():
     common = subprocess.run(['git', 'rev-parse', '--path-format=absolute', '--git-common-dir'], cwd=ROOT,
                             capture_output=True, text=True, check=True).stdout.strip()
     return Path(common).resolve().parent
+
+
+def template_inputs(template, calc=False):
+    """The template files a guide's checks can read. calc: the guide's cfg.calc (None: no calc); left out, every
+    guide's parts count (a check with no guide). What assemble.py inlines is in the guide's dist anyway; the rest of
+    template/ stays in the key for checks that read it at run time. Docs and other guides' AI, save reader and base
+    profile can't reach this guide, so they don't invalidate its passes."""
+    def needed(path):
+        parts = path.relative_to(template).parts
+        if path.suffix == '.md' or '__pycache__' in parts:
+            return False
+        if calc is False or parts[:1] != ('calc',) or len(parts) < 3:
+            return True
+        own = calc or {}
+        if parts[1] == 'ai':
+            return bool(own.get('ai'))
+        if parts[1] == 'readers':
+            return path.stem in ('test', own.get('save'))
+        if parts[1] == 'profiles':
+            return path.stem == own.get('base')
+        return True
+    return {path for path in template.rglob('*') if path.is_file() and needed(path)}
+
+
+def hack_inputs(directory):
+    """A guide's JSON files; watch.json only tracks its sources: no check reads it."""
+    return {path for path in {*directory.glob('*.json'), *(directory / 'extract').glob('*.json')}
+            if path.name != 'watch.json'}
 
 
 class Cache:
@@ -115,8 +143,11 @@ class Cache:
         inputs |= {ROOT / name for name in SHARED_INPUTS}
         if hack:
             directory = ROOT / 'hacks' / hack
-            inputs |= set(directory.glob('*.json')) | set((directory / 'extract').glob('*.json'))
+            inputs |= hack_inputs(directory)
             inputs.add(ROOT / 'dist' / (hack + '.html'))
+            inputs |= template_inputs(ROOT / 'template', load(directory / 'hack.json').get('cfg', {}).get('calc'))
+        else:
+            inputs |= template_inputs(ROOT / 'template')
         lines = [self.env, ' '.join(words)]
         for path in sorted(inputs):
             if path.exists():

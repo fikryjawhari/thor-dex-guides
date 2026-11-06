@@ -3,11 +3,13 @@ uv run python -X utf8 -I tools/gate_test.py"""
 from pathlib import Path
 import subprocess
 import sys
+import tempfile
 import unittest
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / 'tools'))
 import compatlint  # noqa: E402
+import gate  # noqa: E402
 import gateaccept  # noqa: E402
 import textlint  # noqa: E402
 
@@ -141,6 +143,51 @@ class Compat(unittest.TestCase):
 
     def test_template_clean(self):
         self.assertEqual(compatlint.lint(out=lambda line: None), 0)
+
+
+class CacheInputs(unittest.TestCase):
+    """What invalidates a guide's cached passes."""
+
+    def setUp(self):
+        temp = tempfile.TemporaryDirectory()
+        self.addCleanup(temp.cleanup)
+        self.root = Path(temp.name)
+        for name in ('template/dex.js', 'template/README.md', 'template/calc.js', 'template/calc/engine.js',
+                     'template/calc/ai/hardlove.js', 'template/calc/ai/ui.js', 'template/calc/readers/README.md',
+                     'template/calc/readers/gen4.js', 'template/calc/readers/gen3.js', 'template/calc/readers/test.js',
+                     'template/calc/profiles/expansion.json', 'template/calc/profiles/gen7.json',
+                     'hack/hack.json', 'hack/watch.json', 'hack/data.json', 'hack/extract/trainer_keys.json'):
+            path = self.root / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text('x', encoding='utf-8')
+
+    def names(self, *calc):
+        template = self.root / 'template'
+        return {path.relative_to(template).as_posix() for path in gate.template_inputs(template, *calc)}
+
+    def test_docs_never_count(self):
+        for calc in ((), (None,), ({'base': 'gen7'},)):
+            self.assertFalse({name for name in self.names(*calc) if name.endswith('.md')})
+
+    def test_other_guides_parts_do_not_count(self):
+        self.assertEqual(self.names({'base': 'gen7', 'save': 'gen3'}), {
+            'dex.js', 'calc.js', 'calc/engine.js', 'calc/readers/gen3.js', 'calc/readers/test.js',
+            'calc/profiles/gen7.json'})
+
+    def test_own_ai_counts(self):
+        names = self.names({'ai': 'hardlove', 'base': 'expansion', 'save': 'gen4'})
+        self.assertLessEqual({'calc/ai/hardlove.js', 'calc/ai/ui.js', 'calc/readers/gen4.js',
+                              'calc/profiles/expansion.json'}, names)
+
+    def test_no_calc_keeps_the_shared_page(self):
+        self.assertEqual(self.names(None), {'dex.js', 'calc.js', 'calc/engine.js', 'calc/readers/test.js'})
+
+    def test_no_guide_keeps_everything_but_docs(self):
+        self.assertEqual(len(self.names()), 10)
+
+    def test_watch_json_does_not_count(self):
+        self.assertEqual({path.name for path in gate.hack_inputs(self.root / 'hack')},
+                         {'hack.json', 'data.json', 'trainer_keys.json'})
 
 
 if __name__ == '__main__':

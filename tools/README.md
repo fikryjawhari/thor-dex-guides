@@ -205,8 +205,9 @@ intended changes go in the accepts.
 
 Result cache: a browser check that passes is recorded in the main checkout's `.tmp/check-cache/` (shared by every
 worktree) under the sha256 of what it reads: its command, the check script and every module it imports, the guide's
-dist and its `hacks/<hack>/*.json` / `extract/*.json`, the baseline HTML it compares with, `template/`, the save
-fixtures, the Thor frame, EI's data.json (the save-table source) and the Chrome / Node versions. Run again on the same
+dist and its `hacks/<hack>/*.json` / `extract/*.json` (not `watch.json`), the baseline HTML it compares with, the
+`template/` files it can reach (no `*.md`; of `calc/ai`, `calc/readers` and `calc/profiles`, only the guide's own and the
+test reader, so a change to one guide's AI or a doc leaves the other guides' passes valid), the save fixtures, the Thor frame, EI's data.json (the save-table source) and the Chrome / Node versions. Run again on the same
 inputs it reports `cached` without running, so an audit costs only the guides and checks a change touched, and a
 parent's audit after a worker's is free on what the worker already checked. Failures are never cached. `--fresh`
 runs everything (and records the passes); use it after changing something a check reads that the key doesn't cover.
