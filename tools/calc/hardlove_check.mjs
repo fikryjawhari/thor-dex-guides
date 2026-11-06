@@ -97,6 +97,14 @@ check('w2-source-species-weights-reach-engine', () => {
     assert.ok(result.notes.includes(String(weightkg)), `${id}: expected ${weightkg} kg`);
   }
 });
+check('0.8.9: Cerulean shop berries give Natural Gift 90 BP of the itemdata.c type', () => {
+  const gift = data.M.indexOf('Natural Gift');
+  const atk = {id: 'snorlax', lv: 50, ab: -1}, ground = {id: 'sandslash', lv: 50, ab: -1};
+  assert.equal(engine.calc({...atk, it: 'Razz Berry'}, atk, {mv: gift}, {}).bp, 90);
+  assert.equal(engine.calc({...atk, it: 'Belue Berry'}, atk, {mv: gift}, {}).bp, 90);
+  assert.equal(Math.max(...engine.calc({...atk, it: 'Belue Berry'}, ground, {mv: gift}, {}).rolls ?? [0]), 0, 'Electric on Ground');
+  assert.equal(engine.calc({...atk, it: 'Oran Berry'}, atk, {mv: gift}, {}).bp, 80, 'other berries keep stock data');
+});
 check('w2-hp-bands-and-manual-power-override', () => {
   const sample = caseByName('w2-flail-p32');
   const maximum = engine.stats(sample.atk)[0];

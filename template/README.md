@@ -352,7 +352,7 @@ deduplicated trainer / section `field` evidence, then none. The first select opt
 manual selections have an accent border. The source line names area / setter / manual provenance; **Auto** clears
 every manual Field override. Simultaneous leads resolve in Speed order, slower setter winning (reversed under
 Trick Room; at the same Speed the foe's wins); primal weather resists ordinary setters. `DMG.settings().setterStays` controls whether a departing
-setter leaves its layer behind. A fainted entrant sets nothing. Area evidence also supplies foe Tailwind, the
+setter leaves its layer behind (a primal setter only with `primalStays`). A fainted entrant sets nothing. Area evidence also supplies foe Tailwind, the
 foe's guessed +1 crit, lead-exempt player Spikes / Toxic Spikes and Trick Room. Thunderstorm is Rain + Electric
 Terrain; random terrain and Fog are text only (Fog is a weather where the profile offers it: below). The Area line exposes the original wording on tap / tooltip;
 variant labels are ignored. Automatic Field toggles are dashed, pressed and marked A; tapping makes them manual.

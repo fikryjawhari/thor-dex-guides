@@ -323,7 +323,7 @@ check('fix: item suppression changes damage, speed and choice lock, not raw resi
     assert.notEqual(evaluateSingles({attacker, defender: lax(), field})[1].score, 'Lock');
   }
   const attacker = chomp({item: 'Chesto Berry'}), defender = lax({ability: 'Unnerve'});
-  assert.equal(BuildStateVariables({attacker, defender, field: {}}).attackerMon.item, '');
+  assert.equal(BuildStateVariables({attacker, defender, field: {}}).attackerMon.item, 'Chesto Berry', '0.8.9: the AI reads items ignoring Unnerve');
   assert.equal(calc.IsMoveUsable({attacker, defender}, {...attacker, facts: {torment: true, lastUsedMove: 'Earthquake'}}, EQ), false);
   assert.equal(helpers.MonDiesFromResidualDamage({field: {magicRoom: true}}, chomp({item: 'Leftovers', currentHP: 1, totalHP: 160, status: 'brn'})), false);
 });
@@ -755,7 +755,7 @@ check('doubles: opposite ally weather/item abilities and side-specific incoming 
   assert.deepEqual(doublesPickOrder(state), [1, 0]);
   const ai = BuildStateVariables({attacker: chomp({item: 'Sitrus Berry'}), defender: lax(),
     attackerAlly: chomp(), defenderAlly: lax({ability: 'Unnerve'}), isDoubleBattle: true});
-  assert.equal(ai.attackerMon.item, '');
+  assert.equal(ai.attackerMon.item, 'Sitrus Berry', '0.8.9: the AI reads items ignoring Unnerve');
   const balloon = FillDamageStructFromPartyMon({attacker: chomp(), defender: lax(), field: {magicRoom: true}}, chomp({item: 'Air Balloon'}));
   assert.equal(balloon.isGrounded, false);
   const pair = {attacker: chomp(), defender: lax({moves: [mv('Water Pulse', 'Water', 'Special', 60)]}), isDoubleBattle: true,
@@ -911,6 +911,25 @@ check('0.8.8: Encore restricts moves without a Choice lock; switch percents cap 
   assert.equal(calc.IsMoveUsable({attacker, defender: lax()}, attacker, CLAW), true);
   assert.equal(calc.GetCappedDamagePercent(300, 100), 100);
   assert.equal(calc.GetCappedDamagePercent(99, 100), 99);
+});
+
+// 0.8.9 (f715235073..04d424d6d9): src/trainerai/{main,calc,postKO}.c
+check('0.8.9: Tailwind / Trick Room are -20 when the faster partner already clicked them', () => {
+  const TAILWIND = mv('Tailwind', 'Flying', 'Status', 0, 'DOUBLE_SPEED_3_TURNS');
+  const ROOM = mv('Trick Room', 'Psychic', 'Status', 0, 'TRICK_ROOM');
+  for (const [move, name] of [[TAILWIND, 'Tailwind'], [ROOM, 'Trick Room']]) {
+    const state = {attacker: chomp({moves: [move]}), defender: lax(), field: {}, facts: {}};
+    const ai = BuildStateVariables(state);
+    const branches = partnerMoveNo => enumerateRandomBranches(random => HarassmentScoring(state, 0, {...ai, partnerMoveNo}, random)).map(branch => branch.score);
+    assert.deepEqual(branches(name), [-20], name);
+    assert.ok(branches('Tackle').every(score => score > 0), name);
+  }
+});
+check('0.8.9: post-KO damage percents cap at 100', () => {
+  const state = {attackerSlot: 0, foes: [chomp({currentHP: 0})], foeParty: [chomp({currentHP: 0}), chomp({moves: [EQ]})],
+    players: [lax({currentHP: 1})], defender: lax({currentHP: 1}), activePartySlots: [0], field: {}};
+  const {candidates} = BattleAI_PostKOSwitchIn_Internal(state);
+  assert.equal(candidates[0].matchups[0].percentDealt, 100);
 });
 
 await writeFile(new URL('../../.tmp/ai-engine/results.json', import.meta.url), JSON.stringify({results}, null, 2));

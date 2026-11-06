@@ -325,6 +325,13 @@ checks.push(
         await reloadCalc(page);
         assert.equal(await page.value('CALC.state().field.weather'),'Heavy Rain','ordinary slower setter cannot replace primal weather');
       }
+      if(await page.value('DMG.settings().primalStays')){
+        await configure(page,{name:'Groudon Primal',ability:'Desolate Land'},{name:'Bibarel',ability:'Simple'});
+        await reloadCalc(page);
+        assert.equal(await page.value('CALC.state().field.weather'),'Harsh Sunshine','primal setter sets its weather');
+        await page.value(`CALC.set('mine','hp',0);CALC.render()`);
+        assert.equal(await page.value('CALC.state().field.weather'),'Harsh Sunshine','primal weather stays after its setter faints (primalStays)');
+      }
       await configure(page,{name:'Bibarel',ability:'Simple'},{name:'Torkoal',ability:'Drought',l:null});
       await reloadCalc(page);
       await page.value(`CALC.set('foe','l',50);CALC.render()`);

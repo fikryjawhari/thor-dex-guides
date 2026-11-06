@@ -850,7 +850,7 @@ function intimidateMarks(atk, def, values = {}) {
 }
 
 function settings() {
-  return {setterStays: profile.setterStays ?? profile.gen <= 5};
+  return {setterStays: profile.setterStays ?? profile.gen <= 5, primalStays: !!profile.primalStays};
 }
 
 function derived(set, values = {}, otherSet = null) {
@@ -1450,6 +1450,8 @@ function calcCore(atk, def, slot, values = {}, action = null) {
   // The power the hit used (state, stock power changes like Facade or Hex, the hack's own power rules), reported
   // whenever it differs from the listed power; moves whose power changes hit by hit keep their per-hit rolls instead.
   // Stock reports a power modifier unrounded (Knock Off 97.5); the game rounds it (Gen 5+ half down, Gen 4 floor).
+  // Stock records Natural Gift's placeholder power (1) as moveBP; the hit itself uses the berry's.
+  if (moveData.name === 'Natural Gift' && attacker.item?.endsWith('Berry')) result.rawDesc.moveBP = generation.items.get(toID(attacker.item))?.naturalGift?.basePower ?? result.rawDesc.moveBP;
   const rawPower = result.rawDesc.moveBP ?? context.state.firstPower ?? Number(power);
   const shownPower = Number.isInteger(rawPower) ? rawPower : profile.gen >= 5 ? Math.ceil(rawPower - 0.5) : Math.floor(rawPower);
   const min = Math.min(...rolls);

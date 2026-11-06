@@ -3,7 +3,7 @@ import argparse
 from pathlib import Path
 from urllib.request import urlopen
 
-PIN = 'f715235073f9a6ab91be697e277c6c23d9e7caf4'
+PIN = '04d424d6d9dca3a8c66573f9628a9b3b6d4ccee4'
 FILES = tuple(f'src/trainerai/{name}.c' for name in (
     'main', 'setupStateVariables', 'calcDamage', 'calcSpeed', 'scoringHelper',
     'calc', 'pick_command', 'postKO',

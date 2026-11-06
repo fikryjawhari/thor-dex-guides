@@ -328,5 +328,6 @@
 {"k":"10.12.0","n":"Nuzlocker Ethan 1","loc":"Victory Road 1F","id":428,"sp":["azelf","mabosstiff","palafin","blaziken","arceus","mega_garchomp_z"]},
 {"k":"10.12.1","n":"Nuzlocker Ethan 2","loc":"Victory Road 1F","id":429,"sp":["uxie","blaziken","mabosstiff","xerneas","salamence","mega_lucario_z"]},
 {"k":"10.12.2","n":"Nuzlocker Ethan 3","loc":"Victory Road 1F","id":367,"sp":["mesprit","palafin","salamence","zamazenta_crowned","blaziken","mega_absol_z"]},
-{"k":"t329","n":"Roughneck Rodney","loc":"Victory Road 1F","id":422,"sp":["politoed","kommo_o","mega_golisopod","moltres_galarian","inteleon","raging_bolt"]}
+{"k":"t329","n":"Roughneck Rodney","loc":"Victory Road 1F","id":422,"sp":["politoed","kommo_o","mega_golisopod","moltres_galarian","inteleon","raging_bolt"]},
+{"k":"t330","n":"Pokémon Trainer Ethan / Lyra","loc":"Olivine City","id":313,"sp":["weavile","tapu_fini","yanmega","toedscruel","mega_dragalge","azumarill"]}
 ]

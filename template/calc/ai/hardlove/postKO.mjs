@@ -1,7 +1,7 @@
 import {Fraction, roundedPercentages} from '../enumerate.mjs';
 import {snapshotMon} from './state.mjs';
 import {BattleAI_CalcDamage} from './damage.mjs';
-import {AI_IsClientGrounded, BattleAI_AdjustUnusualMoveDamage, BattleAI_GetHighestParadoxStat, CanAttackerOneShotDefender, IsMoveUsable} from './calc.mjs';
+import {AI_IsClientGrounded, BattleAI_AdjustUnusualMoveDamage, BattleAI_GetHighestParadoxStat, CanAttackerOneShotDefender, GetCappedDamagePercent, IsMoveUsable} from './calc.mjs';
 import {AI_IsClient2Faster, BattleAI_CalcEffectiveSpeed} from './speed.mjs';
 
 const ZERO = new Fraction();
@@ -90,8 +90,8 @@ export function BattleAI_PostKOSwitchIn_Internal(state, {calcWithHighestDamageHi
       const outgoing = calcPlayerAsDefender(pairState, partyMon, defender);
       const incoming = calcPlayerAsAttacker(pairState, partyMon, defender);
       return {active: true, speed: AI_IsClient2Faster(pairState, defender, partyMon),
-        percentDealt: Math.trunc(100 * outgoing.damage / defender.hp) % 65536,
-        percentReceived: Math.trunc(100 * incoming.damage / partyMon.hp) % 65536,
+        percentDealt: GetCappedDamagePercent(outgoing.damage, defender.hp),
+        percentReceived: GetCappedDamagePercent(incoming.damage, partyMon.hp),
         outgoingKO: CanAttackerOneShotDefender(outgoing.damage, outgoing.move?.category, outgoing.move, partyMon, defender),
         incomingKO: CanAttackerOneShotDefender(incoming.damage, incoming.move?.category, incoming.move, defender, partyMon)};
     });

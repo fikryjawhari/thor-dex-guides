@@ -1028,6 +1028,9 @@ await test('automatic entry: generation defaults, setterStays and added crit sta
   }
   engine.init(data, {...profiles.expansion, setterStays: true});
   assert.equal(engine.settings().setterStays, true);
+  assert.equal(engine.settings().primalStays, false);
+  engine.init(data, {...profiles.expansion, setterStays: true, primalStays: true});
+  assert.equal(engine.settings().primalStays, true);
 });
 
 const autoGuide = {...data, AB: [...data.AB, ...['Guard Dog', 'Mirror Armor', 'Rattled', 'Ripen', 'Cheek Pouch',

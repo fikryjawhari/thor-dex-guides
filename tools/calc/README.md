@@ -370,8 +370,9 @@ Sword/Shield or Download stages; those are recomputed by the next calculation. A
   (the initial drop has `src: 'Intimidate'`, Defiant/Competitive/Rattled/Adrenaline Orb their own names).
   `speed` takes `otherSet` to include Rattled/Adrenaline Orb, including reflection, without writing stages.
   Protosynthesis/Quark Drive choose their highest stat automatically in Sun/Electric Terrain or with Booster Energy.
-- `settings()` returns `{setterStays: boolean}`: explicit profile `setterStays`, otherwise true in Gen 4-5,
-  false in Gen 6+. Hardlove overrides it to true. This is page-layer policy, not weather mutation.
+- `settings()` returns `{setterStays, primalStays}` (booleans): explicit profile `setterStays`, otherwise true in Gen 4-5,
+  false in Gen 6+; `primalStays` from the profile, default false (a departing primal setter clears its weather). Hardlove
+  sets both true. This is page-layer policy, not weather mutation.
 
 Automatic action tests are in `test.mjs`; hack differences in `calc_states.json`. Those fixtures optionally
 select `api` (`hit`, `turn`, `berry`, `derived`, `settings`, `speed`, `intimidate`, default `calc`), and

@@ -4,8 +4,8 @@
       "name": "Released game source",
       "type": "github",
       "repo": "kumakuma1/hardlove",
-      "ref": "f715235073f9a6ab91be697e277c6c23d9e7caf4",
-      "baseline_note": "0.8.8 pin: the patch is dated 2026-11-02 (Drive, Pacific time; the user saw 2026-11-03 locally, so after 15:37 UTC); 'overhaul trainer' (this commit, 2026-11-02 15:37 UTC) is the last commit before it and includes 'small ai edits / alluring voice' (ee6ccbe, 06:44 UTC). Neither bumps the in-game version text (still 0.8.7); the next commit, cca6bdf (2026-11-04), sets it to 0.8.9. Fetched with the Drive docs on 2026-11-05.",
+      "ref": "04d424d6d9dca3a8c66573f9628a9b3b6d4ccee4",
+      "baseline_note": "0.8.9 pin: head of beta_hardlove since 2026-11-05 19:25 UTC ('merge'); the patch went up 2026-11-05 11:11 Drive time, and this merge only adds battle-test text to 79e25d0 (18:51 UTC), so the game is the same at both. It sets the in-game version text since cca6bdf. Fetched with the Drive docs on 2026-11-06.",
       "paths": [
         "asm/include/items.inc",
         "asm/include/species.inc",
@@ -35,7 +35,7 @@
         "url": "https://drive.google.com/embeddedfolderview?id=1tBVoMcm-kZdUOWL1yhkxwykvDH5o85C6&hl=en",
         "pattern": "flip-entry-title\">HardloveGold_Demo_([0-9.]+)\\.xdelta",
         "select": "latest",
-        "version": "0.8.8"
+        "version": "0.8.9"
       },
       "state": {
         "sha": "f715235073f9a6ab91be697e277c6c23d9e7caf4",

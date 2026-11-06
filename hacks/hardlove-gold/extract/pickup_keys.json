@@ -305,5 +305,8 @@
 {"k":"p303","i":"Rare Candy","loc":"Route 27","t":"Found: Route 27, On a rock near the end of the route, above a ledge only accessible from Route 26 (hidden)"},
 {"k":"p304","i":"Rare Candy","loc":"Victory Road 1F","t":"Found: Victory Road, Northeast of the last hole (vanilla)"},
 {"k":"p305","i":"Rare Candy","loc":"Goldenrod City","t":"Also: Goldenrod City Department Store, From a man on the left on the 5th floor, after beating Schorsch. Starter: Litten, Froakie"},
-{"k":"p306","i":"Rare Candy","loc":"SS Aqua 1F","t":"Also: Vermilion City, Received from the Pokémon Fan Club Chairman (vanilla)"}
+{"k":"p306","i":"Rare Candy","loc":"SS Aqua 1F","t":"Also: Vermilion City, Received from the Pokémon Fan Club Chairman (vanilla)"},
+{"k":"p307","i":"Clefablite","loc":"Dark Cave","t":"Also: Dark Cave, from the man in the northwest corner of the Route 45 side (requires Surf)"},
+{"k":"p308","i":"Dragalgite","loc":"Lighthouse","t":"Also: Olivine City, given by Ethan/Lyra after defeating her"},
+{"k":"p309","i":"Golisopite","loc":"Victory Road 1F","t":"Also: Victory Road 1F, reward for beating Roughneck Rodney"}
 ]

@@ -13,7 +13,7 @@ const data = await load('hacks/hardlove-gold/data.json');
 const cfg = (await load('hacks/hardlove-gold/hack.json')).cfg.calc;
 const {matchups} = await load('hacks/hardlove-gold/calc_matchups.json');
 const expectedGaps = await load('tools/calc/hardlove_ai_damage_gaps.json');
-assert.equal(expectedGaps.sourcePin, 'f715235073f9a6ab91be697e277c6c23d9e7caf4');
+assert.equal(expectedGaps.sourcePin, '04d424d6d9dca3a8c66573f9628a9b3b6d4ccee4');
 assert.equal(new Set(expectedGaps.cases.map(entry => entry.name)).size, expectedGaps.cases.length);
 assert.ok(expectedGaps.cases.every(entry => matchups.some(matchup => matchup.name === entry.name)));
 const engine = await createEngine(data, cfg);
@@ -71,7 +71,7 @@ for (const row of rows) {
   }
 }
 await mkdir(new URL('../../.tmp/ai-engine/', import.meta.url), {recursive: true});
-await writeFile(new URL('../../.tmp/ai-engine/damage-comparison.json', import.meta.url), JSON.stringify({sourcePin: 'f715235073f9a6ab91be697e277c6c23d9e7caf4', rows}, null, 2));
+await writeFile(new URL('../../.tmp/ai-engine/damage-comparison.json', import.meta.url), JSON.stringify({sourcePin: '04d424d6d9dca3a8c66573f9628a9b3b6d4ccee4', rows}, null, 2));
 console.log('same', rows.filter(row => row.same).length, 'of', rows.length);
 for (const row of rows.filter(row => !row.same)) console.log(row.name, '| engine', row.engine?.[0], row.engine?.[15], '| ai', row.ai?.[0], row.ai?.[15], '|', row.difference ?? row.err ?? 'UNEXPLAINED');
 const unexplained = rows.filter(row => !['match', 'known-difference'].includes(row.status));

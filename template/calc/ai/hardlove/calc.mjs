@@ -96,12 +96,9 @@ export function HasMovePranksterPriority(state, attacker, move, defender) {
       || ['singletarget', 'normal'].includes(target) && attacker !== defender && !facts(defender).sameSide);
 }
 
-export function BattleAI_GetActiveItem(state, mon, side) {
+export function BattleAI_GetActiveItem(state, mon) {
   const input = facts(mon);
   if (has(mon.ability, 'Klutz') || input.embargo || input.embargoFlag || state.field?.magicRoom) return '';
-  const attackerSide = side ? side === 'attacker' : mon === state.attacker || mon === state.attackerAlly;
-  const opposing = attackerSide ? [state.defender, state.defenderAlly ?? state.allies?.[1]] : [state.attacker, state.attackerAlly ?? state.allies?.[0]];
-  if (String(mon.item ?? '').endsWith(' Berry') && opposing.some(other => other && has(other.ability, 'Unnerve') && hp(other) > 0)) return '';
   return mon.item ?? '';
 }
 

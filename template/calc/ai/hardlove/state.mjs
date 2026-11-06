@@ -9,7 +9,7 @@ const statNames = ['attack', 'defense', 'speed', 'spAttack', 'spDefense', 'accur
 export function snapshotMon(state, mon, side) {
   const facts = {...mon.facts};
   const snapshot = {...mon, ...facts, facts, moves: (mon.moves ?? []).slice(0, 4).map(move => ({...move, flags: [...(move.flags ?? [])]})), types: [...(mon.types ?? [])], statBoosts: {...mon.statBoosts}};
-  snapshot.item = BattleAI_GetActiveItem(state, mon, side);
+  snapshot.item = BattleAI_GetActiveItem(state, mon);
   snapshot.hp = mon.currentHP;
   snapshot.maxhp = mon.totalHP;
   snapshot.percenthp = Math.trunc(100 * snapshot.hp / snapshot.maxhp);

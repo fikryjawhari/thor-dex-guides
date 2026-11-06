@@ -1,4 +1,22 @@
 {
   "Infinite Candy": ["An infinite Rare Candy that never runs out of juice.", 1],
-  "Starter Card": ["This card lets your Starter use the Move Relearner for free.", 1]
+  "Starter Card": ["This card lets your Starter use the Move Relearner for free.", 1],
+  "Razz Berry": ["90 BP Normal attack when used with Natural Gift.", 1],
+  "Bluk Berry": ["90 BP Fighting attack when used with Natural Gift.", 1],
+  "Nanab Berry": ["90 BP Flying attack when used with Natural Gift.", 1],
+  "Wepear Berry": ["90 BP Poison attack when used with Natural Gift.", 1],
+  "Pinap Berry": ["90 BP Ground attack when used with Natural Gift.", 1],
+  "Pomeg Berry": ["90 BP Psychic attack when used with Natural Gift.", 1],
+  "Kelpsy Berry": ["90 BP Ice attack when used with Natural Gift.", 1],
+  "Qualot Berry": ["90 BP Dragon attack when used with Natural Gift.", 1],
+  "Hondew Berry": ["90 BP Dark attack when used with Natural Gift.", 1],
+  "Cornn Berry": ["90 BP Rock attack when used with Natural Gift.", 1],
+  "Magost Berry": ["90 BP Bug attack when used with Natural Gift.", 1],
+  "Rabuta Berry": ["90 BP Ghost attack when used with Natural Gift.", 1],
+  "Nomel Berry": ["90 BP Steel attack when used with Natural Gift.", 1],
+  "Spelon Berry": ["90 BP Fairy attack when used with Natural Gift.", 1],
+  "Pamtre Berry": ["90 BP Fire attack when used with Natural Gift.", 1],
+  "Watmel Berry": ["90 BP Water attack when used with Natural Gift.", 1],
+  "Durin Berry": ["90 BP Grass attack when used with Natural Gift.", 1],
+  "Belue Berry": ["90 BP Electric attack when used with Natural Gift.", 1]
 }

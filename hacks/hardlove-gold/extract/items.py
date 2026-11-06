@@ -26,7 +26,17 @@ def build(D):
     miss = lambda t: 1 if re.search(r'miss permanently', t, re.I) else 0
     hi = [[S(r.get(1)), S(r.get(2))] for n, r in rows_(IL['Held Items']) if n > 1 and S(r.get(1))]
     IT.append({'n': 'Held Items', 'k': 'gen', 'note': '', 'r': [[a, b, None, miss(b)] for a, b in hi]})
-    be = [[S(r.get(4)), (S(r.get(5)) + (' Yield: ' + S(r.get(6)) if S(r.get(6)) not in ('', '-') else '')).strip()] for n, r in rows_(IL['Held Items']) if n > 1 and S(r.get(4))]
+    # Second berry table (0.8.9, same columns): a "Berry (Natural Gift, 90 BP) | Location | Type" row, then the Cerulean
+    # shop's berries with " as the location ditto; the last column is the Natural Gift type (checked: itemdata.c).
+    be = []; gift = None; last = ''
+    for n, r in rows_(IL['Held Items']):
+        name, where, extra = S(r.get(4)), S(r.get(5)), S(r.get(6))
+        if n == 1 or not name: continue
+        m = re.match(r'Berry \(Natural Gift, (\d+) BP\)', name)
+        if m: gift = m.group(1); continue
+        where = last if where == '"' else where; last = where
+        if gift: be.append([name, '%s (Natural Gift: %s, %s BP).' % (where.rstrip('.'), extra, gift)])
+        else: be.append([name, (where + (' Yield: ' + extra if extra not in ('', '-') else '')).strip()])
     IT.append({'n': 'Berries', 'k': 'gen', 'note': '', 'r': [[a, b, None, miss(b)] for a, b in be]})
     for nm, tn in (('Heart Scales', 'Heart Scale'), ('Rare Candies', 'Rare Candy')):
         sh = IL[nm]

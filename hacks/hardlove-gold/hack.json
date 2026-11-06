@@ -3,7 +3,7 @@
  "title": "Hardlove Gold Dex",
  "game": "Hardlove Gold",
  "platform": "NDS",
- "version": "0.8.8",
+ "version": "0.8.9",
  "cfg": {
   "name": "Hardlove Gold",
   "orig": "",
@@ -21,6 +21,7 @@
   "calc": {
    "ai": "hardlove",
    "setterStays": true,
+   "primalStays": true,
    "base": "expansion",
    "save": "gen4",
    "evs": false,
@@ -290,6 +291,114 @@
      "Maranga Berry"
     ],
     "items": {
+     "Razz Berry": {
+      "naturalGift": {
+       "basePower": 90,
+       "type": "Normal"
+      }
+     },
+     "Bluk Berry": {
+      "naturalGift": {
+       "basePower": 90,
+       "type": "Fighting"
+      }
+     },
+     "Nanab Berry": {
+      "naturalGift": {
+       "basePower": 90,
+       "type": "Flying"
+      }
+     },
+     "Wepear Berry": {
+      "naturalGift": {
+       "basePower": 90,
+       "type": "Poison"
+      }
+     },
+     "Pinap Berry": {
+      "naturalGift": {
+       "basePower": 90,
+       "type": "Ground"
+      }
+     },
+     "Pomeg Berry": {
+      "naturalGift": {
+       "basePower": 90,
+       "type": "Psychic"
+      }
+     },
+     "Kelpsy Berry": {
+      "naturalGift": {
+       "basePower": 90,
+       "type": "Ice"
+      }
+     },
+     "Qualot Berry": {
+      "naturalGift": {
+       "basePower": 90,
+       "type": "Dragon"
+      }
+     },
+     "Hondew Berry": {
+      "naturalGift": {
+       "basePower": 90,
+       "type": "Dark"
+      }
+     },
+     "Cornn Berry": {
+      "naturalGift": {
+       "basePower": 90,
+       "type": "Rock"
+      }
+     },
+     "Magost Berry": {
+      "naturalGift": {
+       "basePower": 90,
+       "type": "Bug"
+      }
+     },
+     "Rabuta Berry": {
+      "naturalGift": {
+       "basePower": 90,
+       "type": "Ghost"
+      }
+     },
+     "Nomel Berry": {
+      "naturalGift": {
+       "basePower": 90,
+       "type": "Steel"
+      }
+     },
+     "Spelon Berry": {
+      "naturalGift": {
+       "basePower": 90,
+       "type": "Fairy"
+      }
+     },
+     "Pamtre Berry": {
+      "naturalGift": {
+       "basePower": 90,
+       "type": "Fire"
+      }
+     },
+     "Watmel Berry": {
+      "naturalGift": {
+       "basePower": 90,
+       "type": "Water"
+      }
+     },
+     "Durin Berry": {
+      "naturalGift": {
+       "basePower": 90,
+       "type": "Grass"
+      }
+     },
+     "Belue Berry": {
+      "naturalGift": {
+       "basePower": 90,
+       "type": "Electric"
+      }
+     },
      "Figy Berry": {
       "heal": 0.125,
       "threshold": 0.5

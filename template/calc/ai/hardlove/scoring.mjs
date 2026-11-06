@@ -440,7 +440,7 @@ function HarassmentScoringPort(battleSystem, attacker, moveIndex, ai)
         }
         break;
     case "DOUBLE_SPEED_3_TURNS":
-        if (context.tailwindCount[ai.attackerSide]) {
+        if (context.tailwindCount[ai.attackerSide] || ai.partnerMoveNo == "TAILWIND") {
             moveScore -= 20;
             break;
         }
@@ -455,7 +455,7 @@ function HarassmentScoringPort(battleSystem, attacker, moveIndex, ai)
 
         break;
     case "TRICK_ROOM":
-        if (context.field_condition & FLAGS.FIELD_CONDITION_TRICK_ROOM) {
+        if ((context.field_condition & FLAGS.FIELD_CONDITION_TRICK_ROOM) || ai.partnerMoveNo == "TRICKROOM") {
             moveScore -= 20;
             break;
         }

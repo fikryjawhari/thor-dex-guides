@@ -7,7 +7,7 @@ for(const [key,value] of Object.entries(data.GID.sp)){const [species,form]=key.s
 const facts={},manual={},slots={mine:[],foe:[]},viewed={mine:0,foe:0};
 let cacheKey='',cached=null,lastInput=null,lastParties=null;
 const empty=()=>({species:'',level:1,types:[],ability:'',item:'',status:'',attack:1,defense:1,spAttack:1,spDefense:1,speed:1,currentHP:0,totalHP:1,statBoosts:{},moves:[],facts:{}});
-const metadata=(kind,name)=>api.metadata[kind][id(name)]||{};
+const metadata=(kind,name)=>({...api.metadata[kind][id(name)],...(kind==='items'?profile.over?.items?.[name]:null)});
 function party(side){
  const selected=ctx.sideInfo(side),trainer=ctx.trainer();
  if(side==='foe')return (trainer?.p||[]).map((unused,index)=>{const key='foe:'+trainer.k+':'+index;return {key,mon:ctx.applyEdits(ctx.foeBase(trainer,index),key)};});
