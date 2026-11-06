@@ -48,12 +48,14 @@ def check_current(new):
         for team in [trainer] + trainer.get('pt', []):
             assert all(mon['id'] in new_pokemon for mon in team['p'])
     assert 'mini' not in new['TR']
-    assert len(new['TR']['caps']) == len(CAPS) == 29
+    # Caps for Totems, Kahunas and the Elite Four only (walk.regroup): the rest of CAPS joined the next one kept.
+    kept = [row for row in CAPS if row[2].startswith(('Totem ', 'Kahuna ', 'Elite Four'))]
+    assert len(CAPS) == 29 and len(new['TR']['caps']) == len(kept) == 13, len(kept)
     names = [group['n'] for group in new['TR']['g']]
     assert names == [split['n'] for split in new['WK']['splits']]
     assert names[-3:] == ['Elite Four Split [Cap 100]', 'Post-game: Episode RR', 'Post-game']
     for index, (name, level) in enumerate(new['TR']['caps']):
-        boss = CAPS[index][2]
+        boss = kept[index][2]
         assert names[index] == split_name(boss, level)
         assert boss in name
         assert not ('Dexio' in name and 'Heahea' in name) and 'Battle Royal' not in name
@@ -115,14 +117,17 @@ def check_totems(data, cards):
         if 'Gumshoos' in name:
             assert 'Photonic Sun' in trainer['tags'] and not trainer.get('st')
         if '(Rematch)' in name:
-            assert placements[trainer['k']] == len(CAPS) + 1 and trainer['cap'] == 0
+            assert placements[trainer['k']] == len(data['TR']['g']) - 1 and trainer['cap'] == 0
             assert trainer['loc'] == 'Verdant Cavern'
         else:
             cap_name = 'Totem Gumshoos' if name == 'Totem Raticate' else name
             target = next(index for index, cap in enumerate(CAPS) if cap[2] == cap_name)
-            assert placements[trainer['k']] == target
+            # the box is the first kept cap at or after the boss's own (walk.regroup)
+            boss = next(cap[2] for cap in CAPS[target:] if cap[2].startswith(('Totem ', 'Kahuna ', 'Elite Four')))
+            group = next(index for index, g in enumerate(data['TR']['g']) if g['n'].startswith(boss.split(' and ')[0] + ' Split'))
+            assert placements[trainer['k']] == group, name
             assert trainer['loc'] == CAPS[target][1]
-            assert trainer['cap'] == data['TR']['g'][target]['cap']
+            assert trainer['cap'] == data['TR']['g'][group]['cap']
     assert next(trainer for trainer in totems if trainer['n'] == 'Ultra Necrozma')['p'][0]['l'] == 100
     print('PASS: all 13 Totem battles, game sets (IVs, EVs), exact auras, no trainer EVs outside Totems, foe allies, version tags, cap boxes and walkthrough links')
 

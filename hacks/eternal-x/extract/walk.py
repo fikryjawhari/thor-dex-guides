@@ -134,3 +134,13 @@ def build(D):
     D['WK'] = {'splits': splits, 'np': np, 'docs': docs}
     report('walkthrough:', len(splits), 'splits', sum(len(split['st']) for split in splits), 'stop fragments,',
            len(out), 'legacy stop keys,', sum(len(s['it']) for s in out), 'items placed,', len(np), 'not placed')
+
+
+# The user's caps (2026-11-06): gym leaders and the Elite Four only.
+CAP_SPLITS = {'Viola', 'Grant', 'Korrina', 'Ramos', 'Clemont', 'Valerie', 'Olympia', 'Wulfric', 'Elite Four'}
+
+
+def regroup(D):
+    """Run by finalise: the kept cap splits (extractlib.merge_cap_splits)."""
+    from extractlib import merge_cap_splits
+    merge_cap_splits(D, lambda name: name in CAP_SPLITS)

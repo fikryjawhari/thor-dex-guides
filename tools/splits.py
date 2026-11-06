@@ -11,7 +11,8 @@ def split_name(name, cap=None):
             cap = int(previous_cap)
     name = re.sub(r'^Split \d+:\s*', '', name)
     name = re.sub(r'\s+Split$', '', name)
-    if name in ('Champion', 'Elite Four & Champion', 'Elite Four and Champion', 'The Pokémon League'):
+    name = re.sub(r'^Pre-', '', name)
+    if name in ('Champion', 'Elite 4', 'Elite Four & Champion', 'Elite Four and Champion', 'The Pokémon League'):
         name = 'Elite Four'
     if name.lower().startswith('post-game'):
         return 'Post-game' + name[len('Post-game'):]

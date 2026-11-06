@@ -44,6 +44,7 @@
     }
    }
   },
+  "locPost": true,
   "ls": {
    "dex": "bb2rdex",
    "calc": "bb2rcalc",

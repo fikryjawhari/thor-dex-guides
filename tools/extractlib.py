@@ -140,6 +140,8 @@ def split_names(D):
     for group in D['TR']['g']:
         if re.search(r'\[(?:Level )?Cap \d+\]$', group['n']):
             group['n'] = split_name(group['n'])
+    if D['TR'].get('caps'):
+        D['TR']['caps'] = [[split_name(row[0]) if row[0].startswith('Pre-') else row[0], *row[1:]] for row in D['TR']['caps']]
 
 
 def trainers_follow_walk(D):
@@ -230,13 +232,89 @@ def gauntlets(trainers, rules):
                     trainer['gc'] = list(keys)
 
 
-def finalise(D, hack, prune=None, gauntlet_rules=None):
+def merge_cap_splits(D, keep, rename=None):
+    """A guide that caps only some fights: every split with a level cap that keep(name) refuses joins the next one it
+    accepts, on the walkthrough and the Trainers page, in the same order. name is the split's name without ' Split
+    [Cap N]'; rename maps a kept name to the one shown. The joined split takes the kept split's cap, a place's cap line
+    counts the battles to it, and a stop keeps its key (schema.py would give it its position here, so it gets it first:
+    dex.js migrateWalkState moves saved state). Two stops or places side by side with one name become one, the first's
+    key staying (only stops with no checklist steps: a tick's key is its stop's). Splits with no cap (Post-game) stay.
+    Runs after the trainer keys and gauntlets, which read the names and places as the sources give them. Idempotent."""
+    base = lambda name: re.sub(r' Split \[Cap \d+\]$', '', name)
+    splits, groups = D['WK']['splits'], D['TR']['g']
+    assert [s['n'] for s in splits] == [g['n'] for g in groups], 'walkthrough splits and trainer boxes differ'
+    for si, split in enumerate(splits):
+        for ti, stop in enumerate(split['st']):
+            stop.setdefault('k', f'{si}.{ti}')
+    rows = dict(zip((g['n'] for g in groups if g.get('cap')), D['TR'].get('caps', [])))
+    out_splits, out_groups, waiting, caps = [], [], [], []
+    for split, group in zip(splits, groups):
+        capped = bool(group.get('cap'))
+        if capped and not keep(base(group['n'])):
+            waiting.append((split, group))
+            continue
+        if not capped:
+            assert not waiting, ('capped splits with no kept split after them', [g['n'] for _, g in waiting])
+            out_splits.append(split)
+            out_groups.append(group)
+            continue
+        name = base(group['n'])
+        cap, shown = group['cap'], (rename or {}).get(name, name)
+        run = waiting + [(split, group)]
+        waiting = []
+        caps.append([shown if shown != name else rows[group['n']][0], cap])
+        boss = next((s['cap'] for s in group['sec'] if isinstance(s.get('cap'), list)), None)
+        for index, (_, old) in enumerate(run):
+            later = sum(next((s['cap'][3] for s in g['sec'] if isinstance(s.get('cap'), list)), 0) for _, g in run[index + 1:])
+            for section in old['sec']:
+                if isinstance(section.get('cap'), list):
+                    section['cap'] = [boss[0], boss[1], boss[2], section['cap'][3] + later]
+                for trainer in section['tr']:
+                    if trainer.get('cap') == old['cap']:
+                        trainer['cap'] = cap
+        merged_split = dict(split, n=f'{shown} Split [Cap {cap}]', st=[s for sp, _ in run for s in sp['st']])
+        notes = [sp['note'] for sp, _ in run if sp.get('note')]
+        if notes:
+            merged_split['note'] = ' '.join(notes)
+        out_splits.append(merged_split)
+        out_groups.append(dict(group, n=merged_split['n'], sec=[s for _, g in run for s in g['sec']],
+                               **({'tab': shown if group['tab'] == name else merged_split['n']} if group.get('tab') else {})))
+    assert not waiting, ('capped splits with no kept split after them', [g['n'] for _, g in waiting])
+    for split in out_splits:
+        stops = []
+        for stop in split['st']:
+            if stops and stops[-1]['n'] == stop['n'] and not stop.get('s'):
+                last = stops[-1]
+                for field in ('a', 'it', 'tr'):
+                    last[field] = last.get(field, []) + [x for x in stop.get(field, []) if field != 'a' or x not in last.get('a', [])]
+                if not stop.get('x'):
+                    last.pop('x', None)
+                if stop.get('note'):
+                    last['note'] = (last.get('note', '') + ' ' + stop['note']).strip()
+                assert not stop.get('e'), ('a return-visit stop would be merged', stop['n'])
+            else:
+                stops.append(stop)
+        split['st'] = stops
+    for group in out_groups:
+        sections = []
+        for section in group['sec']:
+            if sections and sections[-1]['h'] == section['h']:
+                sections[-1]['tr'] += section['tr']
+            else:
+                sections.append(section)
+        group['sec'] = sections
+    D['WK']['splits'], D['TR']['g'] = out_splits, out_groups
+    D['TR']['caps'] = caps
+
+
+def finalise(D, hack, prune=None, gauntlet_rules=None, regroup=None):
     """The end of every build: Items standard (tools/itemstd.py), stable pickup keys (tools/pickup_keys.py),
     the hack's species prune, stable trainer keys
     (tools/trainer_keys.py: extract/trainer_keys.json), Trainers page in walkthrough order, shared split names, the data
     move properties/interactions (tools/moveprops.py), schema (tools/schema.py: dead fields dropped, stop keys,
     key order). Optional gauntlet_rules(group, section) runs after key assignment and walkthrough ordering;
-    omitted rules preserve existing gc when re-finishing built data. Idempotent."""
+    omitted rules preserve existing gc when re-finishing built data. Optional regroup(D) changes the splits after that
+    (merge_cap_splits). Idempotent."""
     itemstd.standardise(D, itemstd.RULES.get(hack, {}), report)
     pickup_keys.stabilise(D, os.path.join(ROOT, 'hacks', hack, 'extract', 'pickup_keys.json'), report,
                           itemstd.RULES.get(hack, {}).get('once', pickup_keys.ONCE))
@@ -248,6 +326,8 @@ def finalise(D, hack, prune=None, gauntlet_rules=None):
     trainer_fields.annotate(D)
     if gauntlet_rules is not None:
         gauntlets(D['TR'], gauntlet_rules)
+    if regroup is not None:
+        regroup(D)
     moveprops.apply(D, hack, report)
     item_text.apply(D, hack, report)
     schema.standardise(D)

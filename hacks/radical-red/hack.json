@@ -3477,6 +3477,7 @@
    "save": "cfru",
    "cfru": "radicalred41"
   },
+  "locPost": true,
   "ls": {
    "dex": "rrdex",
    "calc": "rrcalc",

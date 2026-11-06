@@ -495,7 +495,11 @@ let DRAG=null,DROPPED=0;const DRAGCELL='.mg .dstrip button[data-a="mpick"],.dtea
 const dragRef=el=>({src:el.dataset.src,pid:el.dataset.pid});
 // A foe (or partner) Pokémon dropped on my team becomes a custom set (once per trainer slot: pid f:<trainer>:<slot>).
 function foeCopy(k,i){const pid='f:'+k+':'+i;if(!ST.custom.some(mon=>mon.pid===pid)){const base=foeBase(trByK[k],i);if(!base)return null;ST.custom.push({id:base.id,pid,l:Number.isFinite(base.l)?base.l:getMon('mine')?.l||50,na:base.na,a:base.a,i:base.i,m:base.m,iv:base.iv.slice(),ev:base.ev.slice()});}return {src:'custom',pid};}
-function dragTarget(x,y){const g=DRAG.ghost;g.style.display='none';const el=document.elementFromPoint(x,y);g.style.display='';return el?.closest('.dteamrow button')||null;}
+// A drop goes to the slot under the finger, else the nearest slot when the finger is just off the row (the end slots
+// sit against the panel's edge and the divider; a finger on them often lands past it).
+function dragTarget(x,y){const g=DRAG.ghost;g.style.display='none';const el=document.elementFromPoint(x,y);g.style.display='';const hit=el?.closest('.dteamrow button');if(hit)return hit;
+ const row=document.querySelector('.dteamrow'),r=row?.getBoundingClientRect();if(!r?.width||x<r.left-20||x>r.right+20||y<r.top-10||y>r.bottom+10)return null;
+ let best=null,dist=1e9;for(const b of row.querySelectorAll('button')){const c=b.getBoundingClientRect(),d=Math.hypot(x-(c.left+c.right)/2,y-(c.top+c.bottom)/2);if(d<dist){dist=d;best=b;}}return best;}
 function dragStart(){const d=DRAG,g=d.el.cloneNode(true),r=d.el.getBoundingClientRect();d.on=true;g.classList.add('dghost');g.removeAttribute('data-a');g.style.width=r.width+'px';g.style.height=r.height+'px';document.body.appendChild(g);d.ghost=g;d.el.classList.add('dlift');document.body.classList.add('ddrag');dragMove(d.x,d.y);}
 function dragMove(x,y){const d=DRAG;d.x=x;d.y=y;d.ghost.style.transform=`translate(${x-d.ghost.offsetWidth/2}px,${y-d.ghost.offsetHeight*.9}px) scale(1.2)`;const t=dragTarget(x,y);document.querySelectorAll('.dteamrow .dover').forEach(el=>el!==t&&el.classList.remove('dover'));if(t)t.classList.add('dover');d.ghost.classList.toggle('drm',d.from==='team'&&!t);
  cancelAnimationFrame(d.raf);if(narrowTop()&&(y<40||y>innerHeight-40)){const step=y<40?-6:6,loop=()=>{if(DRAG!==d||!d.on)return;scrollBy(0,step);d.raf=requestAnimationFrame(loop);};d.raf=requestAnimationFrame(loop);}}

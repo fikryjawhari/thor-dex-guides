@@ -164,5 +164,11 @@ def name_splits(D):
     for si, split in enumerate(W['splits']):
         if split.get('note'):
             out[min(b for b, s in first.items() if s == si)]['note'] = split['note']
+    # Rusturf Tunnel on the way, before its grunt: the last stop of Roxanne's split, not the first of the next (the user,
+    # 2026-11-06). It has no trainers, so the rule above moved it on with the current split.
+    for split, after in zip(out, out[1:]):
+        for stop in [s for s in after['st'] if s['k'] == '0.12']:
+            after['st'].remove(stop)
+            split['st'].append(stop)
     W['splits'] = out
     report('walkthrough splits = trainer boxes:', ', '.join(f"{s['n']} {len(s['st'])}" for s in out))

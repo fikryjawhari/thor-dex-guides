@@ -561,7 +561,8 @@ function tkBar(){const [n,f]=tkCounts();
  return `<div class="card tkbar">${PICK?`<div class="bar tkchoices" style="margin:0"><label><span class="mut small">Starter</span>${starterSel('tk-starter')}</label>${PLAYER?`<label><span class="mut small">Player</span>${playerSel('tk-player')}</label>`:''}</div>
  <div class="mut small" style="margin-top:6px">${cnt}</div>`:`<div class="bar" style="margin:0"><span class="mut small">${cnt}</span></div>`}
  <div class="bar" style="margin:8px 0 0">${trackerButtons()}</div></div>`;}
-const encAll=a=>ARS(a).flatMap(x=>[x,...(MEM[x]||[])]).map(encSummary).join('');
+// A list's tracked encounters, each slot once: a stop or card lists every floor of a merged slot, and each floor is that slot.
+const encAll=(...as)=>[...new Set(as.flat().flatMap(a=>ARS(a).flatMap(x=>[x,...(MEM[x]||[])])))].map(encSummary).join('');
 function encSummary(a){const e=TK.e[a];if(!e)return '';if(e.f)return '<span class="tag">failed</span>';const p=byId[e.p];return p?`<a class="tag got" href="#/p/${p.id}">${esc(p.name)}</a>`:'';}
 // The page (template/README.md → Encounters): a card per location (LGRP, route order; the encounter standard below,
 // or EI's egg towns: locSlots). State in LS.loc {o:{<area>:1 open card}, x:{<area>.0:0 closed white box},
@@ -586,6 +587,11 @@ const LGRP=(()=>{const out=[];
   // slot with a note (RR's egg-hatch places: the tracker, the note, "No wild Pokémon here.").
   if(A.sub||A.es||isCard(i)||(A.in==null&&!A.ns&&A.note)||slotL(i).some(li=>locs[li]))out.push({a:[i],n:A.n});});
  return out;})();
+// CF.locPost: places the walkthrough first reaches in a Post-game split wait behind one "Post-game" box at the end
+// (LO.o.pg: open), shown among the rest while searching. Its header only shows and hides them, so they keep their own
+// open state and no sticky header stacks on another.
+const POSTA=(()=>{const out=new Set(),seen=new Set();if(!CF.locPost)return out;D.WK.splits.forEach(sp=>{const pg=/^post[- ]?game/i.test(sp.n);sp.st.forEach(x=>[...x.a,...Object.keys(x.e||{}).map(Number)].forEach(a=>[a,slotOf(a)].forEach(y=>{if(!seen.has(y)){seen.add(y);if(pg)out.add(y);}})));});return out;})();
+const isPostG=g=>g.a.every(a=>POSTA.has(a));
 const LSEC=(k,m,tags,body)=>sectionHTML(esc(k+'.'+m),esc(m),tags,body,!!st.q||LO.s[k+'.'+m]===1);
 const encTable=(rows,note)=>(note?`<div class="mut small" style="margin:4px 0 2px">${esc(note)}</div>`:'')+`<table class="enc">${rows.map(x=>`<tr class="${x.d?'dupe':''}"><td style="width:44px">${sprl(x.p.id,'s40')}</td><td>${plink(x.p.id)}<div>${x.p.t.map(ty).join('')}</div>${x.note&&!note?`<div class="mut small">${esc(x.note)}</div>`:''}</td><td class="n">${esc(x.show)}${x.chg?'<div class="mut small">was '+(x.r?x.r+'%':esc(x.rs))+'</div>':''}</td><td class="n">${x.lv.size?'Lv '+esc([...x.lv].join(', ')):''}</td></tr>`).join('')}</table>`;
 const mTags=(rows,allD)=>allD?'<span class="tag">all dupes</span>':`<span class="mut small">${rows.length}</span>`;
@@ -694,7 +700,8 @@ function bindExtra(){const b=app.querySelector('details.split[data-a="x"]>.body'
   else{const res=e.nextElementSibling;e.oninput=()=>{res.innerHTML=hits(e.value).map(id=>opt(id,'tk-opt','s40')).join('');res.querySelectorAll('.tk-opt').forEach(o=>o.onclick=()=>choose(i,o.dataset.id));};}});}
 function locBox(g,cf){const a=g.a[0];const h=AR[a].sub?locSlots(a,cf):esCard(a,cf);
  return h+`<button class="endbar sp" hidden>${UPI}<span>Collapse ${esc(g.n)}</span></button>`;}
-TOG.locs=TOG.l=d=>{if(d.matches('details.split[data-a]')){const b=d.querySelector(':scope>.body');if(d.open&&!b.innerHTML){if(d.dataset.g==='x'){b.innerHTML=extraHTML();colBind(b);bindExtra();}else{b.innerHTML=locBox(LGRP[+d.dataset.g],caughtFams(-1));colBind(b);bindTrackers();}}
+TOG.locs=TOG.l=d=>{if(d.matches('.pgw')){const b=d.nextElementSibling;b.hidden=!d.open;if(d.open){LO.o.pg=1;b.querySelectorAll('details.split[data-a][open]').forEach(TOG.locs);bindTrackers();}else delete LO.o.pg;loSave();barsSoon();return;}
+ if(d.matches('details.split[data-a]')){const b=d.querySelector(':scope>.body');if(d.open&&!b.innerHTML){if(d.dataset.g==='x'){b.innerHTML=extraHTML();colBind(b);bindExtra();}else{b.innerHTML=locBox(LGRP[+d.dataset.g],caughtFams(-1));colBind(b);bindTrackers();}}
   if(!st.q){if(d.open)LO.o[d.dataset.a]=1;else delete LO.o[d.dataset.a];loSave();}}
  else if(st.q)return;else if(d.matches('details.stopd')){if(d.open)delete LO.x[d.dataset.k];else LO.x[d.dataset.k]=0;loSave();}
  else if(d.matches('details.sec')){if(d.open)LO.s[d.dataset.s]=1;else delete LO.s[d.dataset.s];loSave();}};
@@ -704,13 +711,14 @@ function listLocs2(scroll){fil.innerHTML='';const s=st.q;const li=st.lopenLi;st.
  // nothing to catch has no card (the standard leaves it out): its link shows the page as it is.
  let tk=null;const g0=li!=null&&LOC2A[li]!=null&&LGRP.find(g=>g.a.includes(cardOf(LOC2A[li])));
  if(g0){const a=LOC2A[li],o=cardOf(a),g=g0;LO.o[g.a[0]]=1;
-  tk=o+'.0';delete LO.x[tk];loSave();}
+  if(isPostG(g))LO.o.pg=1;tk=o+'.0';delete LO.x[tk];loSave();}
  const hit=i=>ARS(i).some(i=>AR[i].n.toLowerCase().includes(s)||slotL(i).some(li=>LOC[li].toLowerCase().includes(s)||(locs[li]||[]).some(([p])=>p.key.includes(s))));
- const list=LGRP.map((g,gi)=>gi).filter(gi=>!s||LGRP[gi].a.some(hit));
+ const list=LGRP.map((g,gi)=>gi).filter(gi=>!s||LGRP[gi].a.some(hit)),pg=s?[]:list.filter(gi=>isPostG(LGRP[gi]));
+ const box=gi=>{const g=LGRP[gi];return `<details class="split jt" data-a="${g.a[0]}" data-g="${gi}" ${LO.o[g.a[0]]||s?'open':''}><summary>${esc(g.n)} ${encAll(g.a)}</summary><div class="body"></div></details>`;};
  app.innerHTML=tkBar()+(s?'':segBar('lc-all all'))+
-  list.map(gi=>{const g=LGRP[gi];return `<details class="split jt" data-a="${g.a[0]}" data-g="${gi}" ${LO.o[g.a[0]]||s?'open':''}><summary>${esc(g.n)} ${g.a.map(encAll).join('')}</summary><div class="body"></div></details>`;}).join('')+
+  list.filter(gi=>s||!isPostG(LGRP[gi])).map(box).join('')+(pg.length?`<details class="split pgw" ${LO.o.pg?'open':''}><summary>Post-game <span class="mut small">· ${pg.length}</span></summary></details><div class="pgb"${LO.o.pg?'':' hidden'}>${pg.map(box).join('')}</div>`:'')+
   ((!s||'extra'.includes(s)||(TK.x||[]).some(x=>xHits(x,s)))?`<details class="split jt" data-a="x" data-g="x" ${LO.o.x||s?'open':''}><summary>Extra <span class="mut small">· ${(TK.x||[]).length}</span></summary><div class="body"></div></details>`:'');
- app.querySelectorAll('details.split[data-a][open]').forEach(d=>TOG.locs(d));bindTrackers();bars();
+ app.querySelectorAll('details.split[data-a][open]').forEach(d=>{if(!d.closest('.pgb[hidden]'))TOG.locs(d);});bindTrackers();bars();
  if(scroll&&tk)land(app.querySelector(`details.stopd[data-k="${tk}"]>summary`));}
 
 
@@ -912,7 +920,7 @@ function segAll(b,list){const open=b.dataset.a==='1',y=b.getBoundingClientRect()
 // Rail jump buttons: up = top of the split you're in, or the previous one when this one's header already sits at the
 // top with the gap above it; down = the next split to that same spot, so up and down undo each other.
 const RJ=document.querySelector('.rjump');
-const jts=()=>[...app.querySelectorAll(document.body.dataset.v==='p'?'details.psec':'details.split.jt')];
+const jts=()=>[...app.querySelectorAll(document.body.dataset.v==='p'?'details.psec':'details.split.jt')].filter(d=>!d.closest('.pgb[hidden]'));
 function jump(dir){if(CF.calc&&location.hash==='#/calc'&&window.CALC){const stops=window.CALC.stops();const target=dir>0?stops.find(stop=>stop>scrollY+3):stops.slice().reverse().find(stop=>stop<scrollY-3);scrollTo(0,target??(dir>0?stops[stops.length-1]:0));jumpState();return;}const t=T(),sp=jts(),hs=sp.map(d=>d.getBoundingClientRect().top);let i;
  if(dir<0){i=-1;hs.forEach((y,j)=>{if(y<t-2)i=j;});if(i<0){scrollTo(0,0);jumpState();return;}}
  else{i=hs.findIndex(y=>y>t+2);if(i<0){scrollTo(0,html.scrollHeight);jumpState();return;}}
@@ -1065,7 +1073,7 @@ function walkStop(s,si,ti,cf,shown){const k=si+'.'+ti;const closed=!(WO.x[k]===1
  // A stop with nothing in it is just a direction ("back to Iki Town"): a grey sign, not a box that opens nothing.
  if(!lv.length&&!areas.length&&!its.length&&!ts.length&&!s.note)return `<div class="wsign" data-k="${k}">${esc(s.n)}</div>`;
  const split=D.WK.splits[si],cap=+(split.n.match(/\[(?:Level )?Cap (\d+)\]/)?.[1]||0);
- let h=`<details class="stopd" ${closed?'':'open'} data-k="${k}"><summary class="stoph"><span class="pn">${esc(s.n)}${s.x?' <span class="mut small">(on the way)</span>':''}</span>${s.a.map(encAll).join('')}${ts.length?walkPt(ts,cap):''}</summary><div class="stop">`+
+ let h=`<details class="stopd" ${closed?'':'open'} data-k="${k}"><summary class="stoph"><span class="pn">${esc(s.n)}${s.x?' <span class="mut small">(on the way)</span>':''}</span>${encAll(s.a)}${ts.length?walkPt(ts,cap):''}</summary><div class="stop">`+
   (s.note?`<div class="trnote" style="margin:6px 0">${esc(s.note)}</div>`:'')+
   (lv.length?walkSec(k,'c',`<span class="tag${nd===lv.length?' got':''}">${nd}/${lv.length}</span>`,`<div class="chkb">${steps}</div>`,mq):'')+
   (areas.length?walkSec(k,'e',areas.map(([ai])=>encSummary(slotOf(ai))).join(''),enc):'')+

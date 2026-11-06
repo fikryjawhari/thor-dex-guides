@@ -15,6 +15,7 @@ from collections import Counter
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 from common import DATA, sid   # noqa: E402
+from extractlib import split_name   # noqa: E402
 import locs   # noqa: E402
 data = Path(__file__).resolve().parents[1] / 'data.json'
 if not data.is_file():
@@ -287,8 +288,8 @@ def trainer_checks(D):
     caps = [c['cap'][1] for c in CAPS]
     # the 18 Hardcore caps: Main E44:E78 = data.js caps = the boxes
     assert bosssheet.main_caps() == ['%s (%d)' % sc for sc in zip(T.SPLITS, caps)]
-    assert [[g['n'], g['cap']] for g in TR['g']] == [['%s Split [Cap %d]' % sc, sc[1]] for sc in zip(T.SPLITS, caps)]
-    assert TR['caps'] == [[n, c] for n, c in zip(T.SPLITS, caps)]
+    assert [[g['n'], g['cap']] for g in TR['g']] == [[split_name('%s Split [Cap %d]' % sc), sc[1]] for sc in zip(T.SPLITS, caps)]
+    assert TR['caps'] == [[split_name(n) if n.startswith('Pre-') else n, c] for n, c in zip(T.SPLITS, caps)]
     cards = [(g, s, t) for g in TR['g'] for s in g['sec'] for t in s['tr']]
     for g, s, t in cards:
         assert t['cap'] == g['cap'], (g['n'], t['k'])
@@ -308,20 +309,20 @@ def trainer_checks(D):
     for split, ids in rows:
         for i in (i for i in ids if i not in T.SAME_TEAM):
             want = T.GROUPS.get(i, T.SPLITS[split])
-            assert split_of[i].startswith(want + ' Split'), (i, split_of[i], want)
-    assert split_of['477'] == 'Pre-Koga Split [Cap 68]' and split_of['219'] == 'Pre-Blaine Split [Cap 76]'
+            assert split_of[i].startswith(split_name(want) + ' Split'), (i, split_of[i], want)
+    assert split_of['477'] == 'Koga Split [Cap 68]' and split_of['219'] == 'Blaine Split [Cap 76]'
     assert by_id['219']['cap'] == 76 and [m['l'] for m in by_id['219']['p']] == [
         76 + DATA['scaledLevels'][str(x['level'])] for x in DATA['trainers']['219']['hardcore']]
     # the optional Johto leaders (Bugsy after Lt. Surge, Whitney, Morty, Chuck) in Pre-Erika with the cap box; Bugsy
     # before Lt. Surge in Pre-Lt. Surge
     assert set(T.JOHTO) == {'8', '49', '52', '317'}
     for i in T.JOHTO:
-        assert split_of[i] == 'Pre-Erika Split [Cap 44]' and all('r' in m for m in by_id[i]['p']), i
+        assert split_of[i] == 'Erika Split [Cap 44]' and all('r' in m for m in by_id[i]['p']), i
         assert 'Optional' in by_id[i]['tags'], i
-    assert split_of['47'] == 'Pre-Lt. Surge Split [Cap 36]' and all('r' in m for m in by_id['47']['p'])
+    assert split_of['47'] == 'Lt. Surge Split [Cap 36]' and all('r' in m for m in by_id['47']['p'])
     # the hard line at Lt. Surge: nothing from Route 9, Rock Tunnel, Route 10, Route 8 or the Saffron Dojo before him
     later = ('Route 9', 'Rock Tunnel', 'Route 10', 'Route 8', 'Saffron City Fighting Dojo')
-    early = [t['n'] for g, _, t in cards if g['n'].startswith('Pre-Lt. Surge ') and
+    early = [t['n'] for g, _, t in cards if g['n'].startswith('Lt. Surge ') and
              re.sub(r' (\d+F|B\d+F)$', '', t['loc']) in later]
     assert not early, early
     assert all(m['l'] == 68 + {101: -2, 102: -1, 103: 0, 104: -3}[x['level']]
@@ -329,7 +330,7 @@ def trainer_checks(D):
     # gym rematches: Pre-Koga, the cap box, the one note
     for i in T.REMATCHES:
         t = by_id[i]
-        assert split_of[i] == 'Pre-Koga Split [Cap 68]' and all('r' in m for m in t['p']), i
+        assert split_of[i] == 'Koga Split [Cap 68]' and all('r' in m for m in t['p']), i
         assert T.REMATCH_NOTE in t['note'] and 'Optional' not in t['tags'], i
     # the cap box: every range / open Trainer Order entry with scaled levels; nothing else relative
     relative = {i for i, t in by_id.items() if any('r' in m for m in t['p'])}

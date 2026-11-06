@@ -101,3 +101,10 @@ def build(D):
     splits = D['WK']['splits']
     out = [stop for split in splits for stop in split['st']]
     report('walkthrough:', len(splits), 'splits', len(out), 'stops,', sum(len(s['it']) for s in out), 'items placed,', len(np), 'not placed')
+
+
+def regroup(D):
+    """Run by finalise: caps for Totems, Kahunas and the Elite Four only (the user, 2026-11-06; extractlib.merge_cap_splits).
+    Ultra Necrozma joins Totem Ribombee this way: the same cap."""
+    from extractlib import merge_cap_splits
+    merge_cap_splits(D, lambda name: name.startswith(('Totem ', 'Kahuna ')) or name == 'Elite Four')
