@@ -1,6 +1,6 @@
 # Fill encounters from a save
 
-The user's request (2026-11-06), to start in a new session after `worktree-guide-adjust` merges: on save import, offer a
+The user's request (2026-11-06): on save import, offer a
 "Fill from save" button that fills the encounter tracker from each Pokémon's met location.
 
 ## Shape

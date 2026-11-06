@@ -400,7 +400,7 @@ SHEET_SLOTS = {'Gym Leaders': 45, 'Pokemon League': 30, 'Rival': 51, 'Team Shado
                'Team Light Of Ruin Bosses': 42, 'Boss Wild Battles': 18, 'Mega Trainers': 63, 'Other Bosses': 55,
                'Title Defense': 48, 'Battleground': 48}
 PARTNER_SLOTS = 24
-# hzla's Expert sets against the sheet (plans/unbound-sources.md → the join audit): joined slots, distinct sets,
+# hzla's Expert sets against the sheet: joined slots, distinct sets,
 # sheet-only slots, malformed hzla species keys, and every slot that differs (raw: hzla's EV key 'def' counts).
 HZLA = {'joined': 381, 'sets': 380, 'sheet only': 58, 'malformed': 3}
 HZLA_DIFFER = {

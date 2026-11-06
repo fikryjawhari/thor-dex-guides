@@ -305,7 +305,7 @@ const checks = [
       const base = { spe: await spe(), stats: await stats(), ability: await ability() };
       assert.equal(await name(), 'Garchomp');
       await page.tap('.dmatch .cc[data-s="mine"] .mg[data-a="mega"]');
-      // Mega is fight state, not a set edit (plans/calc-auto-effects.md, settled after unit C): no unsaved mark, no Save
+      // Mega is fight state, not a set edit: no unsaved mark, no Save
       assert.equal(await name(), 'Mega Garchomp', 'the Mega name, not an unsaved edit');
       assert.ok(await page.value(`document.querySelector('[data-a="esave"][data-s="mine"]').disabled`), 'nothing to Save');
       assert.notEqual(await stats(), base.stats, 'the stats change');
@@ -371,7 +371,7 @@ const checks = [
     run: async page => {
       await setupCalc(page, { mine: ['party', 0] });
       await changeMove(page, 0, 'Earthquake');
-      // unsaved set edits go when the Pokémon is switched away (plans/calc-auto-effects.md): Save keeps Garchomp's move
+      // unsaved set edits go when the Pokémon is switched away: Save keeps Garchomp's move
       await page.tap('.dmatch .cc[data-s="mine"] [data-a="eopen"]');
       await page.tap('[data-a="esave"][data-s="mine"]');
       await page.tap('.dmatch .cc[data-s="mine"] [data-a="eopen"]');

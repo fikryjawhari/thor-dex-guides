@@ -32,43 +32,6 @@ that section), not the whole file.
   `@scope` block (foe move rows side by side, page 1373 px wide, zoomed out); the rules now carry a
   `:where(body.calc-route)` prefix, `color-mix()` has a fallback, and `tools/compatlint.py` fails on features newer
   than Chrome 109 in every gate run. Every calc Thor test before this was on the broken layout: redo them.
-- **Merged 2026-11-03 from `worktree-check-tests`:** scenarios run `dvkb` only where it changes something (normal
-  first; `dvkb` too if the case touched a number / text / search box, or failed; layout checks keep both), and
-  consistency-check's fit sweep covers move, ability and item pages. `tools/scenarios/blocks.mjs` asserts the box
-  pages' open / close behaviour on every guide (header taps, pinned headers, collapse bars, rail jumps, Expand /
-  Collapse all, reload, place link, Next step), opening blocks with the page's own controls; it replaced pagecheck /
-  walkcheck and was checked against four broken builds. zoomcheck retries stale states once in a fresh context.
-  Gate 372 / 372 (`tools/README.md` → Check timings).
-- **Merged 2026-11-03 from `worktree-check-speed`:** a full audit from scratch takes 40 min (was ~3.5 h), a rerun
-  with nothing changed 88 s. `gate.py` runs every browser check in one pool (8 jobs), reruns pool failures alone and
-  caches passes by content, shared by worktrees (`.tmp/check-cache/`; `--fresh` reruns); checks wait for the page
-  instead of fixed sleeps; jumpcheck and domcompare retry inside the check. Sprites became CSS classes (one `.sp-<id>`
-  rule per sprite instead of a blob URL each): page opens 560 → 310 ms (`template/README.md` → Pokémon sprites).
-  CLAUDE.md / AGENTS.md condensed, PROGRESS.md split into a short status and this file, the new-guide procedure
-  moved to `.agents/references/new-guide.md`. Timings: `tools/README.md` → Check timings.
-- **Merged 2026-11-02 from `worktree-radical-red`:** the Radical Red guide (units 1-11; decisions in
-  `hacks/radical-red/notes.md`), and the fixes from its audit, so every check now passes with no standing exceptions:
-  EI pickup keys stay put across item spellings (`tools/pickup_keys.py`; Empoleonite D / O keep p246 / p247), EI's
-  Striker reads the `kick` flag (hzla EI 142 + 12, 0 mismatch), RR's item text in the shared pool (EI Link Cable,
-  five Unbound items), reproducible item icons (`sprites/items/retained.json`; `worktree_setup.py` links the cache),
-  jumpcheck finds item rows by `data-ri` and exits 1 on a bad jump, domcompare visits every item and move-property
-  page, shared scenario fixtures fit every guide's data (hittable foes, aura toggles only where the ability exists,
-  the real starter area). Audit round 2: 259 / 259 scenarios (one load flake passed alone), domcompare, jump / page /
-  walk / zoom / consistency checks 14 / 14 each, saved state 7 / 7.
-- **Merged 2026-11-02 from `worktree-move-pages`** (none of it on the Thor yet: Open 1):
-  - Move and ability pages; shared move properties / targets / effect odds and ability-item rules
-    (`tools/moveprops.py`, `MV.f` / `tg` / `se`, `MI`, per-hack `extract/move_rules.json`).
-  - Calc fight state: moves that change a type, ability or item do it for the fight (Worry Seed, Trick, Soak ...),
-    effect odds and KO chance on move rows, the new calc layout. `template/README.md`, `tools/calc/README.md`.
-  - Item pages (`#/i/<item>`), links from every place that names an item, the Items tab as one card per item in boxes
-    by kind, pickup ticks shared with the walkthrough (`LS.items.g`, stable keys `extract/pickup_keys.json`), the move
-    page's In battle box / Also TM / Where card, the Pokémon page's Held items (wild odds). `template/README.md` →
-    Item page, Items tab.
-  - Item data: bag text per guide (`extract/item_desc.json`, pooled across guides by `tools/item_text.py`, gaps in
-    `extract/item_text_extra.json`), hand-written In battle text (`tools/battle_text/`, per-hack
-    `extract/battle_text.json`), wild held-item odds (`P.hi`), one spelling per item, one line per pickup labelled
-    Found / Also / Shop, item icons (`sprites/items/`, per-guide sheets by `tools/item_sheets.py`).
-  - Hardlove 0.8.6 and 0.8.7, Heartfelt Gold v1.0.0 sources (formerly HeartGold Retiled; no guide yet).
 
 ## Hack families
 
@@ -96,7 +59,7 @@ Write a family's first guide with its siblings in mind; lift shared code when th
 
 ## Open
 
-1. **Thor / in-game tests** (the user, per guide). Nothing since the consistency pass has been on the device: the item
+1. **Thor / in-game tests** (the user, per guide). Not yet checked on the device: the item
    pages, Items tab and ticks, move / ability pages, the calc fight state, the Pokémon page, the text zoom fix, the
    collapsed pages and Show switch, the hazard chip, rail-tab memory, the sprites as CSS classes (the Pokémon list,
    Pokémon page, trainer cards, calc grids; does a first open feel faster?), and the calc in the offline viewer with the save
@@ -131,7 +94,6 @@ Write a family's first guide with its siblings in mind; lift shared code when th
    17, Hardlove 1 (Pokégear Upgrade 1), BB2R 1; tutor cards are
    parsed from each row's " · " text (structured tutor fields from the extracts would be sturdier); a `nomerge` flag
    in the data instead of the template inferring it; an unused `.phi .sh` rule in dex.css.
-
 9. **Radical Red follow-ups:** the in-game checks in `hacks/radical-red/notes.md` (Damage calc, Save import, the
    Walkthrough's open order questions); one real `.srm` import compared with PKHeX; Gulp Missile's change not
    modelled; Chillet has no sprite (type-coloured circle).
@@ -147,8 +109,7 @@ Write a family's first guide with its siblings in mind; lift shared code when th
     Sun's Sandy Cave as Cave, the Megamart as Grass; BB2R's Undella Bay surf with no season as Spring–Autumn; EI's
     old Underwater entry (failed / unknown species) moving to Route 124; Radical Red's Three Isle Path with no slot. A
     place link lands on the location's white box, not its floor heading (the blocks check would need a change).
-    Empty T3 worktree folders under `~/.t3/worktrees/thor-dex-guides/` (radical-red, emerald-imperium) were held open
-    at deletion: remove them.
+   
 
 ## Decisions
 
@@ -212,7 +173,7 @@ From the app repo's Build environment (adb is at `$LOCALAPPDATA/Android/Sdk/plat
 
 ## Source data (checked 2026-10-19)
 
-Every hack's `.src/` on the PC opens cleanly and matches the counts in its `SOURCES.md`. The six hacks with no guide
+Every hack's `.src/` on the PC opens cleanly and matches the counts in its `SOURCES.md`. The five hacks with no guide
 yet, and the dex source each extract will turn into `data.json`:
 
 | Hack | Dex source (stats, abilities, learnsets, evolutions) | Moves | Wild | Trainers |
@@ -222,7 +183,6 @@ yet, and the dex source each extract will turn into `data.json`:
 | Renegade Platinum | `romhackdex/pokedex/` | `romhackdex/moves.json` | `WildPokemon.txt` (+ RomHackDex) | `TrainerPokemon.txt` |
 | Heartfelt Gold | `hg-engine/species-retiled.json` | `source/data/Moves.c` | `source/data/Encounters.c` + guide | `source/data/Trainers.c` + guide |
 | SoulGold | `data/species.json` + `data/species-details/` | `data/moves.json` | `data/encounters.json` | `data/trainers.json` |
-| Radical Red | `repos/Radical-Red-Pokedex/data.js` (official dex) | same + Showdown flags | same | `data.js` hardcore teams + `trainers-hardcore.xlsx` |
 
 Questions for those builds:
 - **Heartfelt Gold** (HeartGold Retiled renamed at v1.0.0, 2026-10-31; source pass 2026-11-01): the repo now carries its

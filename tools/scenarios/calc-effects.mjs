@@ -1,4 +1,4 @@
-// Move effects in the page (plans/calc-move-effects.md): status moves get a button showing their effect, which applies
+// Move effects in the page (tools/calc/README.md → Move effects): status moves get a button showing their effect, which applies
 // to the side that owns the row (a foe's Swords Dance raises the foe); a move that would fail says Fails and changes
 // nothing; damaging moves' guaranteed effects come with the damage endpoint (Close Combat lowers the user, Nuzzle
 // paralyses). The button fits the closed row at every size, normal and dvkb. Parts whose moves the guide lacks are

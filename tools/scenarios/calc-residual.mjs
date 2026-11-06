@@ -64,7 +64,7 @@ const checks = [{
       assert.equal(await page.count('.dmatch .cc[data-s="mine"] .cn .td'), 1, `${name}: dot on the name`);
       await page.reload();
       await page.route('#/calc');
-      // The chosen type is battle state (scratch, plans/calc-auto-effects.md): a reload starts fresh
+      // The chosen type is battle state (scratch): a reload starts fresh
       assert.equal(await page.value(`CALC.mon('mine').pty||''`), '', `${name}: gone after a reload`);
       assert.equal(await page.count('.dmatch .cc[data-s="mine"] .cn .td'), 0, `${name}: no dot after reload`);
       await page.tap('.dmatch .cc[data-s="mine"] [data-a="eopen"]');

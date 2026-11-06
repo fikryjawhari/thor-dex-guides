@@ -3,7 +3,7 @@ Usage: uv run python -I hacks/unbound/extract/build.py
 
 dex.py runs first (M, MV, AB, P, TC; the move / ability lookups the others use); gid.py last, after finalise()
 (GID indexes M as it ends up). A module still a stub (raises
-NotImplementedError) leaves its tables empty, so data.json builds while units 4-7 are in progress (plans/unbound.md).
+NotImplementedError) leaves its tables empty.
 """
 from pathlib import Path
 import os

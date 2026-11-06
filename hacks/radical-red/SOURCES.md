@@ -77,20 +77,6 @@ Google regenerates xlsx containers: compare cells, not bytes. Wayback blocks scr
 answered a plain curl with a browser User-Agent (2026-11-01).
 
 
-## Files
-
-TODO: document files.
-
-
-## Game files
-
-TODO: document game files.
-
-
-## Source checks
-
-TODO: document source checks.
-
 ## Save format references (unit 7, 2026-11-02; read online, not fetched into `.src/`)
 
 - RR growth rates: `Base_Stats.c` from ydarissep/Radical-Red-Pokedex `65712ed` (2023-08-04), sha256 starting `2cd667a4`;

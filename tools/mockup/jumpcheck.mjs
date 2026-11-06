@@ -74,7 +74,7 @@ const stripe = i => Array.from({ length: Math.ceil(5 * N / TABS) + 1 }, (_, k) =
 const parts = await Promise.all(Array.from({ length: TABS }, async (_, i) => (await tab())(job(stripe(i)))));
 const tried = parts.reduce((n, p) => n + p.tried, 0);
 // A jump that failed while the tabs ran at once is tried again alone, in a fresh tab, once the others are done: land()
-// corrects the scroll for a fixed 700 ms, and under load (the gate runs 8 checks at once) too few frames fit in it.
+// corrects the scroll for a fixed 700 ms, and under the gate's load too few frames fit in it.
 // Only a jump that fails again counts; one that passes is listed as a timing flake.
 let out = parts.flatMap(p => p.out), flaky = [];
 const failed = parts.flatMap(p => p.bad);

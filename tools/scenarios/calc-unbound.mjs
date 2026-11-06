@@ -1,4 +1,4 @@
-// Unbound's calc end to end (plans/unbound.md → Unit 8c, the 2026-10-30 calc answers): the sheet Mega / Z bosses,
+// Unbound's calc end to end: the sheet Mega / Z bosses,
 // every fight gimmick applied from the trainer's area rules through the page (not only the engine), the D2 assumed
 // sets of ordinary trainers and the boxes-only import. Unbound only; others skip.
 import assert from 'node:assert/strict';

@@ -680,12 +680,3 @@ tutors, 140 shop rows, 83 missions, 34 NPCs), every Locations row's place a page
 there, the GID item names, the workbook's TM / Mega Stone / Z-Crystal sheets. Trainers (`trainer_checks`: the
 sheet's slots per worksheet on the cards, the hzla join and its explained differences, the wiki's 309 rows,
 LEVEL CAPS, unknown-stat slots, relative levels). Unit 7 adds its own. Calc stubs remain: calc is disabled.
-Before enabling it, replace the null in tools/scenarios/calc-doubles.mjs EXPECTED with an audited count and add
-tools/trainer_fields_check.py DOUBLES_EXPECTED (DOUBLES_PARTNER_ONLY if needed). The engine stub is registered
-in tools/calc/package.json; review tools/calc/test.mjs field-profile fixtures. Never copy another hack's counts.
-Review tools/itemstd.py RULES only for source-backed quirks; shared defaults need no entry.
-Fill sources/watch.json, version/mode, GID/save reader and sprite additions by hand.
-
-## History
-
-TODO: document history.

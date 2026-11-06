@@ -151,7 +151,7 @@ const checks=[...(guide.cfg.name==='Emerald Imperium'?fixtureChecks:[]),...windo
       await page.tap(`${row}:nth-child(2) [data-a=zmv]`);
       assert.equal(await page.value(`document.querySelector('${row}:nth-child(2) [data-a=state]').getAttribute('aria-pressed')`),'true');
     }
-    // Row state is battle state (scratch, plans/calc-auto-effects.md): never stored, a reload starts fresh
+    // Row state is battle state (scratch): never stored, a reload starts fresh
     assert.notEqual(await page.value('JSON.stringify(CALC.state().st)'),'{}');
     await page.reload();
     assert.equal(await page.value('JSON.stringify(CALC.state().st)'),'{}');

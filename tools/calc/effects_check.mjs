@@ -1,4 +1,4 @@
-// Move effects (plans/calc-move-effects.md, tools/calc/README.md → Move effects): the resolver's blockers and order,
+// Move effects (tools/calc/README.md → Move effects): the resolver's blockers and order,
 // on Emerald Imperium's data with each base profile, then every guide's own `calc_effects.json` fixtures.
 // Run: node tools/calc/effects_check.mjs (part of npm test).
 import assert from 'node:assert/strict';

@@ -1,4 +1,4 @@
-// The Items tab (plans/item-pages.md §5, the walkthrough half of §6; template/README.md → Items tab).
+// The Items tab (template/README.md → Items tab).
 //   boxes    box names and counts from the data, in its order; one card per item (no item twice), a nomerge item's
 //            card per pickup titled by its place (Unbound's Zygarde Cells), tutor cards under their group headings
 //            (Unbound) or the table (no groups); nothing wider than the screen with every box open.

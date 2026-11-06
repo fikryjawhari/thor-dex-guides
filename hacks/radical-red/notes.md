@@ -6,8 +6,6 @@ Scaffold only, based on `unbound`. Feature switches need review.
 
 `uv run python -I hacks/radical-red/extract/build.py`
 
-TODO: implement extract modules; audit inherited cfg switches and cfg.txt wording.
-
 ## Sources and rules
 
 The official 4.1 dex's pinned `data.js` is the numerical authority (SOURCES.md). Its object literal is tokenised,
@@ -57,8 +55,6 @@ registers Radical Red as generation 9 for item text (the Gen 9 additions), witho
 
 Unit 1 shared-helper check: baseline 3400658 captured; `gate.py check unbound --data` passes 6/6, data identical
 except build date and report byte-identical (16.1 s). `build.py` runs with the other units' expected stubs.
-`python assemble.py radical-red` currently stops at the scaffold's ten cfg.txt TODO strings; replacing those is
-outside this unit's hack.json ownership (sk only). No placeholder guard is disabled and no wording is borrowed.
 
 Move metadata: 825 moves from RR Showdown's gen9rr overlay on its base moves, with RR calc MOVES[9] overriding
 damage flags/targets. The one remaining move, Metal Bash, gets contact/normal-target metadata from its in-game
@@ -109,9 +105,6 @@ rejection pass. Every one of the 1,343 species is checked against source stats, 
 resolved learnset/evolution/form links. Lookup, cap, area, Mega-item, source-effect odds and type-chart assertions
 pass. All 44 exported sprites are pixel-identical to the source and accepted by pngpal.crop; source/shared
 coverage is 1,342/1,343, with only Chillet absent. `git diff --check` passes. Logs are local `.tmp/rr-dex/`.
-Assembly remains blocked solely by the scaffold cfg.txt TODO strings, outside unit 1 ownership. Therefore no
-dist render or browser check is claimed. The integration/wording unit must fill those ten strings, then run
-`python assemble.py radical-red`. No full gate, scenario sweep or domcompare was run.
 
 Next units: import common directly; its tables/lookups are ready before dex.build. Read raw records through
 `DATA`, not through a second parser, and never write caches under H.src/H.cache. Call `dex.build` before using M/AB
@@ -623,23 +616,10 @@ Prefix `rr`. Keep these keys once published.
 - `items`: `rritems`
 - `dmg`: `rrdmg`
 
-## Hack-only data
-
-TODO: document hack-only data.
-
 ## Checks
 
 `uv run python -I tools/gate.py check radical-red`
 
-TODO: replace extract/check.py and calc stubs with source-backed assertions. Calc remains disabled.
-Before enabling it, replace the null in tools/scenarios/calc-doubles.mjs EXPECTED with an audited count and add
-tools/trainer_fields_check.py DOUBLES_EXPECTED (DOUBLES_PARTNER_ONLY if needed). The engine stub is registered
-in tools/calc/package.json; review tools/calc/test.mjs field-profile fixtures. Never copy another hack's counts.
-Review tools/itemstd.py RULES only for source-backed quirks; shared defaults need no entry.
-Fill sources/watch.json, version/mode, GID/save reader and sprite additions by hand.
-
 ## History
 
 - 2026-11-06 (the user): shown names lose `Pre-` (`tools/splits.py`; Pre-Elite 4 is the standard Elite Four); `trainers.SPLITS` and these notes keep the sheet's names. Locations: Post-game box (`cfg.locPost`). Split headers show the stop count (`cfg.splitStops`).
-
-TODO: document history.

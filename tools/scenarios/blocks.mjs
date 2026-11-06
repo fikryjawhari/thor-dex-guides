@@ -1,6 +1,6 @@
 // node tools/scenarios/blocks.mjs [dist/<hack>.html]: the open / close behaviour of the box pages (Locations, Trainers,
 // Items, the walkthrough), asserted at 260 x 316 and 537 x 424, normal and dvkb (the search bar's height moves every pinned
-// header). Replaces tools/mockup/pagecheck.mjs and walkcheck.mjs, which printed these numbers for a reader.
+// header).
 // Per page, on the box with the most to it (picked by structure, so any guide's data works):
 //   - a box header tap opens the box and the header stays at its pixel (dex.js flip(): every frame, not just the last);
 //   - a place / trainer / section header tap the same, closing and reopening it;

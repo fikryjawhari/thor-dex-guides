@@ -5,15 +5,15 @@ section the line names. History: git, each hack's `notes.md` → History, `templ
 
 ## Guides on `main` (live: https://fikryjawhari.github.io/thor-dex-guides/)
 
-| Guide | Version / mode | Family | On the Thor |
-| --- | --- | --- | --- |
-| Emerald Imperium | 1.3.1 | pokeemerald-expansion (GBA) | before the item / move pages |
-| Hardlove Gold | 0.8.9 | hg-engine (NDS) | before the item / move pages |
-| Photonic Sun | 2.38 Rebalanced, EV-less | 3DS | before the item / move pages |
-| Eternal X | 2.67 Rebalanced | 3DS | before the item / move pages |
-| Blaze Black 2 Redux | 1.4.1 Complete EVless / Challenge | Drayano (NDS) | maybe not in the library yet |
-| Unbound | 2.1.1.1 Expert | CFRU (GBA) | maybe not in the library yet |
-| Radical Red | 4.1 Hardcore | CFRU (GBA) | not yet |
+| Guide | Version / mode | Family |
+| --- | --- | --- |
+| Emerald Imperium | 1.3.1 | pokeemerald-expansion (GBA) |
+| Hardlove Gold | 0.8.9 | hg-engine (NDS) |
+| Photonic Sun | 2.38 Rebalanced, EV-less | 3DS |
+| Eternal X | 2.67 Rebalanced | 3DS |
+| Blaze Black 2 Redux | 1.4.1 Complete EVless / Challenge | Drayano (NDS) |
+| Unbound | 2.1.1.1 Expert | CFRU (GBA) |
+| Radical Red | 4.1 Hardcore | CFRU (GBA) |
 
 One template, one extract layout (`tools/extractlib.py`), one schema (`tools/schema.py`), one Items standard
 (`tools/itemstd.py`), the damage calc with save import on every guide. Decided where: `template/README.md` (template,
@@ -41,23 +41,14 @@ from link (same library id, saved state kept).
 9. Radical Red follow-ups: in-game checks, one real `.srm` import, Gulp Missile, Chillet's sprite.
 10. Check tiers past ~10 guides (the last check-speed follow-up).
 11. Calc: range compare: noted for later (space); `plans/calc-range-compare.md`.
-12. Encounter standard follow-ups: Thor checks, source assumptions to confirm in-game, two empty T3 folders.
+12. Encounter standard follow-ups: Thor checks, source assumptions to confirm in-game.
 
 ## Next session
 
 - **Next:** fill encounters from a save (`plans/fill-from-save.md`), in a new session.
-- **Guide adjustments** (merged and pushed 2026-11-06, gate 395/395): walkthrough chips once per slot, team-slot drop
-  tolerance, cap splits merged (BB2R, Eternal X, Photonic), RR names and stop counts, EI Rusturf, Post-game box on
-  Locations (BB2R, RR, Photonic), calc foe panel locked at 6 rows, gate default 7 jobs. Update each guide on the Thor
-  (Open 1); DETAIL → Recent merges.
-- **Hardlove Gold 0.8.9** (2026-11-06): Ethan / Lyra, Cerulean berries (Natural Gift in the calc and AI), primal weather
-  stays, AI port (`hacks/hardlove-gold/notes.md` → History, Engine changes). Pushed 2026-11-06. Update the guide on the Thor (Open 1).
+- **Pushed 2026-11-06, not yet on the Thor:** the guide adjustments (DETAIL → Recent merges) and Hardlove Gold 0.8.9
+  (`hacks/hardlove-gold/notes.md` → History, Engine changes). Update each guide (Open 1).
 - **Game-specific code outside the template:** proposal in `plans/hack-extensions.md`, undecided.
-- **Pushed (2026-11-04):** one calc button per trainer, and the encounter standard on every guide. Update each guide
-  on the Thor (Open 1).
-- **Calc plans done** (merged 2026-11-03): gauntlet carry (every guide with chains), Hardlove AI (odds, switch-ins,
-  doubles, Field → AI), Find trainer by location, gate hardening (`-X utf8`, text lint, accept lists, auto-baseline,
-  build freshness). Next: the user's Thor / in-game tests (Open 1), then range compare (Open 11) or a new guide.
 - **Next guide:** say which hack. Sources-only start:
   `.agents/references/new-guide-sources.md`; the whole procedure: `.agents/references/new-guide.md`.
 

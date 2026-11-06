@@ -88,7 +88,7 @@ ALIASES = {
     'item': {'NeverMeltIce': 'Never-Melt Ice', 'Sitrus Berries': 'Sitrus Berry'},
     'species': {},
 }
-# Misspellings seen in the family's docs (BB2R audit 2026-10-29, plans/blaze-black-2-redux-sources.md section 2).
+# Misspellings seen in the family's docs (BB2R audit 2026-10-29).
 TYPOS = {
     'move': {'Twinneedle': 'Twineedle', 'Sliver Wind': 'Silver Wind', 'Autonomize': 'Autotomize',
              'Will-O-Wiisp': 'Will-O-Wisp', 'Ominous Mind': 'Ominous Wind', 'Accupressure': 'Acupressure',

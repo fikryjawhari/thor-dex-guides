@@ -1,6 +1,6 @@
 # Game-specific calc and page code outside the shared template
 
-Proposed 2026-11-06, not decided; decide after the walkthrough fix (`template/` is one session at a time).
+Proposed 2026-11-06, not decided (`template/` is one session at a time).
 
 **Goal:** a change that only one game needs leaves the other guides' bytes alone, so their gate passes stay cached. A
 change for every guide still runs on every guide: that's correct, not a problem.

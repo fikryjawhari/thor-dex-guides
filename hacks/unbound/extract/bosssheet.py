@@ -3,7 +3,7 @@ with its block (the battle) and column group (foe / partner, the rival's starter
 
     blocks()   [Block] in sheet order; Block.groups [Group]; Group.mons [Slot]
 
-Layout (plans/unbound-sources.md → Boss workbook layout): a block's header rows (Name / Name (event) / Location /
+Layout: a block's header rows (Name / Name (event) / Location /
 Location / Event, Fight Gimmicks, Trainer Items) sit above its "Pokemon Names" row; under it, per column: level ("Level at
 Cap", Title Defense "Minimum Level"), ability, held item, 4 moves, nature, 6 EV rows (HP Atk Def SpA SpD Spe) and one
 more row: the calc export label (Boss Wild Battles: "Boosts"). Rival: three six-column starter groups B:G / I:N / P:U

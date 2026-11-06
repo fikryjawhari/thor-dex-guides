@@ -330,14 +330,12 @@ the publisher, not a guarantee. Unbound's wiki uses its page/wiki sitemap index 
 (today's clock is normalised to the date); edits on the same day can be missed. 3DS patch archives are watched in
 their actual folders, but a changed patch still needs manual romfs extraction, not an automatic ROM download.
 
-## Check timings (measured 2026-11-02, this 16-thread PC)
+## Check timings (this 16-thread PC)
 
-Full audit from scratch (`gate.py check --fresh`: data and every browser check, all seven guides, 7 at a time):
-**40 min, 393 / 393** (before this job: ~3 h of browser checks one guide at a time, plus 26 min of scenarios). Work by
-kind in that run (process-minutes under load, 239 in all): scenarios 57 %, domcompare 23 %, jumpcheck 11 %, pagecheck
-4 %, zoomcheck 3 %, the rest (data checks included) 2 %. A rerun with nothing changed: 88 s (343 of 393 cached; the rest are the seconds-long data checks); after a
-change to domcompare only, its 14 sweeps ran and the rest was cached: 10 min. The longest
-single checks (a big guide's domcompare, calc-field-states / calc-team on any guide: 3-4 min under load) set the floor.
+A run that changes every guide's bytes (`gate.py check`, all seven guides, 395 checks, 7 at a time): about 29 min. A
+rerun with nothing changed: about 90 s (browser checks cached; the rest are the seconds-long data checks). Scenarios
+are most of the work, then domcompare, then jumpcheck. The longest single checks (a big guide's domcompare,
+calc-field-states / calc-team on any guide: 3-4 min under load) set the floor.
 
 - **Page opens** were ~43 % of scenario time (EI: 760 cases, 639 s of 1500 s). A fresh open of a 3.5 MB guide took
   ~560 ms, ~250 ms of it creating a blob for each of the Pokémon list's ~1200 sprites; with sprites as CSS classes
@@ -354,16 +352,9 @@ single checks (a big guide's domcompare, calc-field-states / calc-team on any gu
   were set in varied with timing) and leave out the rail jump buttons' `disabled` (scroll-derived; under load it drifted
   and carried from route to route, flagging hundreds of identical Radical Red pages). In the gate each sweep uses `--jobs=2` (the pool is the
   parallelism); alone, 4 is still the best (2026-10-19 slice timings: 1 job 41 s, 2 22 s, 4 14 s, 8 16 s, 12 22 s).
-- **zoom / page / walk checks** wait for the guide's boot (`browser.mjs` → `navigate()`) instead of 1.5 s after each
-  navigation: zoomcheck 42-60 s → ~30 s, walkcheck 20 s → 8 s, pagecheck 71 s → 49 s (most of the rest is its own
-  in-page waits). Their printed output matched the old runs line for line, apart from one 1 px sub-pixel line.
-
-**2026-11-03, after the check-tests job** (`gate.py check`, all seven guides, 8 at a time, 28 of 372 cached):
-**24.5 min, 372 / 372**. Scenarios run `dvkb` only where the normal run touched a box (`tools/scenarios/README.md`):
-1,597 `dvkb` runs left out of 5,183, scenario work ~136 → ~106 process-minutes with the new `blocks.mjs` included
-(it replaced pagecheck / walkcheck); the other browser checks ~66. Unbound's zoomcheck (480 × 392, Locations, mixed,
-Route 5's two bars at zoom 0.5) went stale in the pool, stale again on its in-check replay (still under the pool's
-load) and passed alone: the gate's lone rerun is what clears it. The same state flaked on 2026-11-02.
+- **zoomcheck** waits for the guide's boot (`browser.mjs` → `navigate()`). Unbound's (480 × 392, Locations, mixed,
+  Route 5's two bars at zoom 0.5) can go stale in the pool and again on its in-check replay, still under load: the
+  gate's lone rerun is what clears it.
 
 To time a sweep slice by hand, compare a build with itself (always identical, so only the sweep is timed) and read
 `swept in` and `time by route kind`:

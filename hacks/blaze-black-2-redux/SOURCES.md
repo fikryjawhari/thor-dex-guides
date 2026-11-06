@@ -268,11 +268,6 @@ The Volt White 2 archive and Older Versions folder were not exhaustively audited
 delta is still missing, and cannot be inferred from the short public documentation.
 
 
-## Game files
-
-TODO: document game files.
-
-
 ## Source checks
 
 2026-10-29: pinned hzla's BB2R backups, title routing and Challenge implementation by each file's last-touch SHA;

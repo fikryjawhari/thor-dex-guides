@@ -1,4 +1,4 @@
-// Calc fight state (plans/calc-auto-effects.md, unit C rows of Checks): the scratch lifecycle (battle condition lives
+// Calc fight state: the scratch lifecycle (battle condition lives
 // only while a Pokémon is selected; HP / status / broken are kept; unsaved set edits go on a switch, saved ones stay),
 // a trainer change (both sides fresh at full HP, manual Field overrides cleared), Reset fight (all HP 100 %, statuses
 // cleared, same trainer and Pokémon), reload / migration of older storage, and (C2) Mega and foe set edits kept for

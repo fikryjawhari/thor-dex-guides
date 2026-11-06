@@ -23,7 +23,6 @@ FIXME text.
 
 Complete version, Challenge Mode, EVless patch; NDS, documentation pin 1.4.1 (SOURCES.md). No public source code:
 the docs are the authority, the RomHackDex mirror (`.src/romhackdex/`) fills what they don't list.
-TODO: audit watch.json.
 
 Dex (2026-10-29):
 - **Species**: the mirror's 649 pages in dex order, plus 22 forms (below). Stats, types and abilities from Pokemon
@@ -323,8 +322,6 @@ not saved; no localStorage key was added or changed.
 
 ## Hack-only data
 
-TODO: document hack-only data.
-
 Trainers use optional shared `normal`, `sl` and `hn` schema fields (Trainers below). Four trainer-only Pokestar
 species come from the pinned hzla table; everything stays in the one offline HTML.
 
@@ -449,13 +446,6 @@ nature or an explicit "unknown"; five recorded fixes; every card key in `trainer
 dvkb: 31 Normal lines, nothing past 260 px, no page errors (`tools/mockup/pagecheck.mjs` only knows EI's place names).
 Walkthrough (2026-10-29): `extract/check.py` walk asserts; `gate.py scenarios --only guide-update,stable-keys` pass
 (2 + 4); `tabs_check.py` clean.
-
-TODO: replace extract/check.py and calc stubs with source-backed assertions. Calc remains disabled.
-Before enabling it, replace the null in tools/scenarios/calc-doubles.mjs EXPECTED with an audited count and add
-tools/trainer_fields_check.py DOUBLES_EXPECTED (DOUBLES_PARTNER_ONLY if needed). The engine stub is registered
-in tools/calc/package.json; review tools/calc/test.mjs field-profile fixtures. Never copy another hack's counts.
-Review tools/itemstd.py RULES only for source-backed quirks; shared defaults need no entry.
-Fill sources/watch.json, version/mode, GID/save reader and sprite additions by hand.
 
 Scaffold verification (2026-10-29, baseline 23a42e1): tools/new_hack_test.py 13/13; four live guides' data gate
 24/24 and template gate (--jobs 4) 137/137. All eight normal / dvkb DOM comparisons: 19,850 routes, zero

@@ -175,7 +175,7 @@ try {
   let bad = flagged.filter(r => !fresh.has(r));
   console.log(`flagged by the sweep: ${flagged.length}, rechecked fresh: ${Math.min(flagged.length, +(process.env.FRESH ?? 100))}, identical on a fresh load: ${fresh.size}`, [...fresh].slice(0, 10).join(' '));
   // Still differing: replay each (up to REPLAY, default 3: a replay sweeps the chunk up to the route) alone, after the
-  // sweep. Identical on replay: timing (a huge page such as #/walk not settled while 8 checks ran at once). Differing
+  // sweep. Identical on replay: timing (a huge page such as #/walk not settled under the gate's load). Differing
   // again: printed (SHOW, default 2) and counted. Past REPLAY, every remaining route counts.
   const replayed = [], shown = [];
   for (const r of bad.slice(0, +(process.env.REPLAY ?? 3))) {

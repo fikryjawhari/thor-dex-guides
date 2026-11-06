@@ -1,8 +1,7 @@
 # Big jobs
 
 One bounded implementation worker at a time; durable checkpoints, not chat history, are the recovery record.
-Model/effort/runtime policy comes from current instructions. The cleanup's Opus/Sol/Sonnet exception is not a
-global model permission. Do not infer quota from time/tokens or change the user's effort settings.
+Model/effort/runtime policy comes from current instructions. Do not infer quota from time/tokens or change the user's effort settings.
 
 ## Before kickoff
 - Confirm selected/deferred findings, protected behaviours and actual base SHA. Recheck intervening changes.

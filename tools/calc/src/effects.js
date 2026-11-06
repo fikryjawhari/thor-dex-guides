@@ -1,4 +1,4 @@
-// Move effects: the one resolver every move effect goes through (plans/calc-move-effects.md, tools/calc/README.md →
+// Move effects: the one resolver every move effect goes through (tools/calc/README.md →
 // Move effects). Status-move buttons (`DMG.effect`), damaging moves' guaranteed secondaries (`DMG.hit`) and the move
 // switches all call `resolve`. The move never decides who it lands on: each part names `who` (the user or its
 // target) and the blockers below decide whether it lands. Generation ranges follow Pokémon Showdown at the pinned
