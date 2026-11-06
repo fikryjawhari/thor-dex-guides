@@ -21,7 +21,7 @@ checkout, shared by every worktree), so a rerun on unchanged guides is free; `--
 | A scenario or `tools/calc_check_lib.mjs` | that scenario on every guide |
 | Docs only (`*.md`) | nothing |
 
-Scenarios for an area, every guide at once (8 at a time by default; more only slows each run):
+Scenarios for an area, every guide at once (7 at a time by default: never more, the PC is unusable above it):
 `uv run python -X utf8 -I tools/gate.py scenarios [hack ...] --only calc-layout,calc-controls`
 (names are the stems in `tools/scenarios/`; no `--only` runs all of them; no hack runs every built guide). It lints
 first (`gate.py lint [--fix]`: CRLF, BOM, control bytes, invalid UTF-8) and reassembles any guide whose dist is older
@@ -32,7 +32,7 @@ than its inputs.
 `uv run python -X utf8 -I tools/gate.py check [hack ...]` for every guide the job touched (a template change: all of them;
 no hack named = all). It rebuilds, compares with the baseline (`gate.py baseline [ref]`, see `tools/README.md` →
 Standard gates), then runs every browser check (domcompare both modes, consistency, walk-state, the mockup checks,
-scenarios) 8 at a time on every named guide; a check that fails in the pool reruns alone and, passing then, is listed
+scenarios) 7 at a time on every named guide; a check that fails in the pool reruns alone and, passing then, is listed
 as FLAKY (timing under load, not a failure). Read the summary line and every FAIL.
 Differences the job intended are declared before the run, not read off a failure:
 `--accept-data '[hack:]TR.g[].sec[].tr[].gc,MV[].aiEffect'` (data paths, `[]` any index) and

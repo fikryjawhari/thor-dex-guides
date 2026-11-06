@@ -219,7 +219,7 @@ class Gate:
                 output.write(line + '\n')
         return passed
 
-    def run_browser(self, runs, jobs=8):
+    def run_browser(self, runs, jobs=7):
         """Browser runs [(label, command, hack)], `jobs` at once after one idle check, slowest kinds first.
         A cached pass is skipped; a run that fails in the pool is rerun alone once (pool load only causes timing
         flakes), and a pass then is reported as a flake."""
@@ -447,7 +447,7 @@ def scenario_runs(names, only=None):
             for scenario in scenarios for hack in names]
 
 
-def template_check(gate, names, jobs=8, routes_ok=None):
+def template_check(gate, names, jobs=7, routes_ok=None):
     if not gate.run('assemble', [*PY, 'assemble.py']):
         return
     runs = []
@@ -489,7 +489,7 @@ def main():
     check.add_argument('hacks', nargs='*')
     check.add_argument('--data', action='store_true')
     check.add_argument('--template', action='store_true')
-    check.add_argument('--jobs', type=int, default=8, help='browser checks at once (default 8; 1: serial)')
+    check.add_argument('--jobs', type=int, default=7, help='browser checks at once (default 7; 1: serial)')
     check.add_argument('--fresh', action='store_true', help='ignore cached passes (still records new ones)')
     check.add_argument('--accept-data', action='append', metavar='SPEC',
                        help='data paths that may differ, [hack:]path,... (tools/gateaccept.py; plus .tmp/accept.json)')
@@ -498,7 +498,7 @@ def main():
     scenarios = commands.add_parser('scenarios')
     scenarios.add_argument('hacks', nargs='*')
     scenarios.add_argument('--only', type=lambda text: [part for part in text.split(',') if part])
-    scenarios.add_argument('--jobs', type=int, default=8, help='runs at once (default 8; 1: serial)')
+    scenarios.add_argument('--jobs', type=int, default=7, help='runs at once (default 7; 1: serial)')
     scenarios.add_argument('--fresh', action='store_true', help='ignore cached passes (still records new ones)')
     tidy = commands.add_parser('lint', help='text hygiene only (tools/textlint.py); also first in check / scenarios')
     tidy.add_argument('--fix', action='store_true', help='CRLF to LF and drop BOMs (control bytes: by hand)')

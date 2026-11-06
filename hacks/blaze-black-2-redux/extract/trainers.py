@@ -393,6 +393,8 @@ def build(data):
             if 'Postgame' in tags:
                 group_index = len(CAPS)
             group = groups[group_index]
+            if group['n'].startswith('Brycen ') and trainer['loc'] == "Virbank City and Roxie's Gym":
+                trainer['loc'] = 'Virbank City'   # the visit back for Brycen: the gym is done (the user, 2026-11-06)
             cap = group['cap']
             optional_cap = None  # user 2026-10-29: caps come only from the 21 cap battles; optional bosses take their split's
             if optional_cap:

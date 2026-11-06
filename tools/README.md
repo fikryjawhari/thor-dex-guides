@@ -332,7 +332,7 @@ their actual folders, but a changed patch still needs manual romfs extraction, n
 
 ## Check timings (measured 2026-11-02, this 16-thread PC)
 
-Full audit from scratch (`gate.py check --fresh`: data and every browser check, all seven guides, 8 at a time):
+Full audit from scratch (`gate.py check --fresh`: data and every browser check, all seven guides, 7 at a time):
 **40 min, 393 / 393** (before this job: ~3 h of browser checks one guide at a time, plus 26 min of scenarios). Work by
 kind in that run (process-minutes under load, 239 in all): scenarios 57 %, domcompare 23 %, jumpcheck 11 %, pagecheck
 4 %, zoomcheck 3 %, the rest (data checks included) 2 %. A rerun with nothing changed: 88 s (343 of 393 cached; the rest are the seconds-long data checks); after a

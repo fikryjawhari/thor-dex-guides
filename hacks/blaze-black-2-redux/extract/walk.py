@@ -57,22 +57,10 @@ WATERFALL = ('Benga', None)    # HM05 at Undella Town ends the Hugh split: the n
 
 # The user's caps (2026-11-06): gym leaders and the Elite Four only; the league's last fight names the final split.
 CAP_SPLITS = {'Cheren', 'Roxie', 'Burgh', 'Elesa', 'Clay', 'Skyla', 'Drayden', 'Marlon', 'Iris', 'Elite Four'}
-BRYCEN_RETURN = "Virbank City and Roxie's Gym"   # the visit back for Brycen: the gym is done, the name is the town's
 
 
 def regroup(D):
-    """Run by finalise: the Virbank return stop's name, then the kept cap splits (extractlib.merge_cap_splits)."""
-    for split, group in zip(D['WK']['splits'], D['TR']['g']):
-        if not split['n'].startswith('Brycen '):
-            continue
-        for stop in split['st']:
-            if stop['n'] == BRYCEN_RETURN:
-                stop['n'] = 'Virbank City'
-        for section in group['sec']:
-            if section['h'] == BRYCEN_RETURN:
-                section['h'] = 'Virbank City'
-                for trainer in section['tr']:
-                    trainer['loc'] = 'Virbank City'
+    """Run by finalise: the kept cap splits (extractlib.merge_cap_splits)."""
     merge_cap_splits(D, lambda name: name in CAP_SPLITS, {'Iris': 'Elite Four'})
 
 

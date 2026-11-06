@@ -37,7 +37,7 @@ Read PROGRESS.md at the start of every session (short); PROGRESS-DETAIL.md only 
   + `uv.lock`; don't work around it.
 - Checks: the `verify` skill (`.agents/skills/verify/SKILL.md`) says what to run for a change. The gate:
   `uv run python -X utf8 -I tools/gate.py check [hack ...]` / `scenarios [hack ...] [--only a,b]` / `lint [--fix]`;
-  browser checks run 8 at once, failures rerun alone, and passes are cached by content (an unchanged guide costs
+  browser checks run 7 at once (14 of 16 cores: the most the PC stays usable at), failures rerun alone, and passes are cached by content (an unchanged guide costs
   nothing; `--fresh` reruns). Intended changes are declared, not hand-diffed: `--accept-data` / `--accept-routes` or
   `.tmp/accept.json` (`tools/README.md` → Gate).
 - Git Bash: prefix commands that take `/`-paths with `MSYS_NO_PATHCONV=1`.
