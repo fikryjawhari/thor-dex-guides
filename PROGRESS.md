@@ -47,7 +47,11 @@ from link (same library id, saved state kept).
 
 - **Guide adjustments (2026-11-06):** branch `worktree-guide-adjust`, not merged: walkthrough chips once per slot, team-slot drop
   tolerance, cap splits merged (BB2R, Eternal X, Photonic), RR names and stop counts, EI Rusturf, Post-game box on Locations (BB2R, RR,
-  Photonic), calc foe panel locked at 6 rows. Full gate, then merge, then ask before pushing.
+  Photonic), calc foe panel locked at 6 rows, gate default 7 jobs. **Left: the full gate (stopped by the user 2026-11-06, needs a rerun), merge
+  into `main`, push: the user said no need to ask before this push (it also carries the Hardlove 0.8.9 commits on `main`).** Run from the worktree
+  `.claude/worktrees/guide-adjust`: `uv run python -X utf8 -I tools/gate.py check`. `.tmp/accept.json` there already holds the accepts (delete it
+  after the gate). Last complete run: 386 passed, the only failures were EI's caps table (`Pre-` gone, now accepted) and BB2R's trainer keys
+  (fixed in d3c74cf); no layout failures. Then delete the worktree and branch.
 - **After that merge, in a new session:** fill encounters from a save (`plans/fill-from-save.md`).
 - **Not pushed (2026-11-06):** `main` holds Hardlove 0.8.9 and the narrower gate cache key. The user holds the push until
   a walkthrough-tab issue they'll raise in a new session is resolved. The new key makes the next full gate miss the cache
