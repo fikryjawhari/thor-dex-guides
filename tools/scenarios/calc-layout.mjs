@@ -279,10 +279,10 @@ const checks = [
         [m.mineRows === 4, `attacker rows ${m.mineRows}`],
         [m.foeRows === 4, `defender rows ${m.foeRows} (both movesets are shown)`],
         [m.mineTops.every((top, i) => Math.abs(top - m.foeTops[i]) <= 1), `row tops differ: ${m.mineTops} vs ${m.foeTops}`],
-        // The fit block leaves a 4 px margin top and bottom (8 px short of the window is accepted).
-        [m.fit <= m.innerH && m.fit >= m.innerH - 9, `block height ${m.fit}, want the window ${m.innerH} less a 4 px margin top and bottom`],
+        // The block is as tall as the foe's six rows and the moves need; a taller window shows the page below it.
+        [m.fit <= m.innerH, `block height ${m.fit}, past the window ${m.innerH}`],
         [['auto', 'scroll'].includes(m.gridOverflow) && m.gridScrolls, 'the Mine grid scrolls inside its card'],
-        [m.dfieldTop >= m.innerH, `Field row starts at ${m.dfieldTop} of a ${m.innerH} px window: it should be below the fold (the block is ${m.fit} px)`],
+        [m.dfieldTop >= m.rowsBottom, `Field row starts at ${m.dfieldTop}, above the move rows' end ${m.rowsBottom}`],
         [m.rowsBottom <= m.innerH, `move rows end at ${m.rowsBottom}, past the window ${m.innerH}`],
       ]);
     },

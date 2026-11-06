@@ -182,6 +182,8 @@ Edit. The team area's height is based on closed cards and move rows, so edits/re
 the team from rows to a strip. Editors and expanded moves grow downwards; Field follows the whole moveset.
 No condition labels or category controls appear in profiles that do not declare them.
 
+**Foe panel locked (wide, 2026-11-06, the user):** the trainer panel is always six rows tall and the box beside it three (18 Pokémon, 163 px row), whatever the window's height; a taller window shows the page below (the Field), and nothing resizes when a card or move row grows. Rejected: the old full-window block, whose box gave 3.25 to 4.3 rows on the Thor and left the foe's panel empty below its six rows.
+
 **Both teams in the first frame:** at every viewer size the first frame shows my team, the
 foe's team, both cards, the attacker's four moves (wide: both lists) and the fight bar at once. Both sprite grids keep
 six columns. **Narrow (< 480):** box (unchanged), then the trainer bar (22 px, no panel border), the fight bar (S / D,

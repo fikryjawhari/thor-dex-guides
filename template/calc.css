@@ -619,6 +619,11 @@ body.calc-route .cc .l1 .ddl{line-height:1.6}
  body.calc-route .cc .cl input,body.calc-route .cc .cl .nv{height:20px;min-height:20px}
  body.calc-route .dmatch>.dres{grid-area:mv;align-self:start;gap:2px;min-width:0}
  body.calc-route .dmatch>.dres:last-child{grid-area:mf;display:flex}
+ /* The foe's panel is always six rows tall (fewer Pokémon leave the room empty), the box beside it gets what's left (3
+    rows) and the rest of a taller window goes to the page below; nothing changes size when a card or move row grows. */
+ body.calc-route:not(.calc-short) .fit,body.calc-route:not(.calc-short) .fit:has(.ed){min-height:0;align-content:start}
+ body.calc-route:not(.calc-short) .fit{grid-template-rows:auto minmax(163px,1fr) auto auto auto}
+ body.calc-route:not(.calc-short) .fit:not(:has(.ban)){grid-template-rows:minmax(163px,1fr) auto auto auto}
 }
 @media(max-width:479.98px){
  body.calc-route .fit{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-areas:"ban ban" "box box" "tside tside" "fight fight" "team foe" "cm cf" "mv mv";gap:2px}
