@@ -320,6 +320,7 @@
     ]
    }
   },
+  "locPost": true,
   "ls": {
    "dex": "psdex",
    "calc": "pscalc",

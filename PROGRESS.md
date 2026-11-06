@@ -46,9 +46,10 @@ from link (same library id, saved state kept).
 ## Next session
 
 - **Guide adjustments (2026-11-06):** branch `worktree-guide-adjust`, not merged: walkthrough chips once per slot, team-slot drop
-  tolerance, cap splits merged (BB2R, Eternal X, Photonic), RR names, EI Rusturf, Post-game box on Locations (BB2R, RR). Waiting on the
-  user: lock the calc's foe panel at 6 rows or not (3 box rows always, against 3.25 / 4.3 on the Thor now), and whether to build save-based
-  encounter tracking. Then the full gate (accepts first), merge, ask before pushing.
+  tolerance, cap splits merged (BB2R, Eternal X, Photonic), RR names and stop counts, EI Rusturf, Post-game box on Locations (BB2R, RR,
+  Photonic). Waiting on the user: lock the calc's foe panel at 6 rows or not (3 box rows always, against 3.25 / 4.3 on the Thor now). Then the
+  full gate (accepts first), merge, ask before pushing.
+- **After that merge, in a new session:** fill encounters from a save (`plans/fill-from-save.md`).
 - **Not pushed (2026-11-06):** `main` holds Hardlove 0.8.9 and the narrower gate cache key. The user holds the push until
   a walkthrough-tab issue they'll raise in a new session is resolved. The new key makes the next full gate miss the cache
   once (about 29 min).

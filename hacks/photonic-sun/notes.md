@@ -354,7 +354,7 @@ keys and teams, all 73 area indices and indexed tables, the species kept, the le
 
 ## History
 
-- 2026-11-06 (the user): caps only for Totems, Kahunas and the Elite Four (`walk.regroup`, `extractlib.merge_cap_splits`): 13 cap splits + the two Post-game boxes. Ultra Necrozma's contents are in Totem Ribombee (cap 95). `trainers.CAPS` keeps all 29; stops keep their keys.
+- 2026-11-06 (the user): caps only for Totems, Kahunas and the Elite Four (`walk.regroup`, `extractlib.merge_cap_splits`): 13 cap splits + the two Post-game boxes. Ultra Necrozma's contents are in Totem Ribombee (cap 95). `trainers.CAPS` keeps all 29; stops keep their keys. Locations: Post-game box (`cfg.locPost`).
 
 - **2026-10-25:** Added 13 Totem encounters, doc auras, 20 SOS allies and version tags under stable trainer/stop keys.
 - **2026-10-24:** Ultra Necrozma progression cap 100 → 95; encounter level remains 100.

@@ -3478,6 +3478,7 @@
    "cfru": "radicalred41"
   },
   "locPost": true,
+  "splitStops": true,
   "ls": {
    "dex": "rrdex",
    "calc": "rrcalc",

@@ -36,7 +36,8 @@ every first open on a desktop (more on the Thor), and nearly half of each check'
 | `g3trainer` | Unobtainable species are tagged Trainer only. |
 | `capLast` | The trainer cap box remembers the last cap set, for trainers with no cap. |
 | `walkAreaNote` | Show area notes inside walkthrough encounters. |
-| `locPost` | Locations: places the walkthrough first reaches in a Post-game split wait behind one Post-game box at the end (shut by default, Expand all leaves it shut; search and place links reach them). BB2R, Radical Red. |
+| `locPost` | Locations: places the walkthrough first reaches in a Post-game split wait behind one Post-game box at the end (shut by default, Expand all leaves it shut; search and place links reach them). BB2R, Radical Red, Photonic Sun. |
+| `splitStops` | Walkthrough split headers show the stop count even when stops have checklist steps (a guide with few steps: its ticks count looks like a count of something else). Radical Red. |
 | `trw` | Boss / trainer words, `[one, many, footer]`. |
 | `credit` | Footer credit line (hook in place; no guide sets it yet). |
 | `ls` | Every localStorage key. **Never change one after a guide is published**; add fields inside the existing objects instead. `capset` is unused but kept. |
