@@ -1,6 +1,6 @@
 # Hardlove Gold docs
 
-Fetched 2026-11-01 (0.8.7, 2026-11-01; source and Drive docs refreshed; docs site and Showdown retained;
+Fetched 2026-11-06 (0.8.9, 2026-11-05; source and Drive docs refreshed; docs site and Showdown retained;
 first fetched 2026-10-18 for 0.8.2) from the hack's own source code,
 [kumakuma1/hardlove](https://github.com/kumakuma1/hardlove) (the author's hg-engine build, branch `beta_hardlove`), the
 hack's [docs site](https://kumakuma1.github.io/hardlove-docs/index.html) (repo
@@ -8,8 +8,8 @@ hack's [docs site](https://kumakuma1.github.io/hardlove-docs/index.html) (repo
 [Google Drive](https://drive.google.com/drive/folders/1IltXECEUg7YKeUxO9K6g4bmg33NI4Wax). The source is the authority;
 the docs fill what it lacks. Where each input is used: `notes.md` → Sources and rules.
 
-Pin: 0.8.8 = `f715235073` (2026-11-02 15:37 UTC, "overhaul trainer"; the last commit before the patch, dated
-2026-11-02 Pacific; the in-game version text still says 0.8.7). Earlier: 0.8.7 = `4a8d4a6308`, 0.8.6 = `4af49f7a8c`, 0.8.5 = `64838bf7db`, 0.8.4 = `ee4518c149`, 0.8.3 = `f1b2363001`, 0.8.2 = `8ac661afda`. `build.py` refuses
+Pin: 0.8.9 = `04d424d6d9` (2026-11-05 19:25 UTC, "merge"; only battle-test text after `79e25d0`, 18:51 UTC, the last game
+commit before the patch at about 19:11 UTC). Earlier: 0.8.8 = `f715235073`, 0.8.7 = `4a8d4a6308`, 0.8.6 = `4af49f7a8c`, 0.8.5 = `64838bf7db`, 0.8.4 = `ee4518c149`, 0.8.3 = `f1b2363001`, 0.8.2 = `8ac661afda`. `build.py` refuses
 to run when `repos/hardlove/COMMIT` is not the `watch.json` ref, so update both together.
 
 ## Files
@@ -47,7 +47,7 @@ Read only; never copied into runtime. Paths/line evidence and test limits: notes
 
 ## Re-fetch
 
-Trainer AI source at the same 0.8.8 pin (`f715235073f9a6ab91be697e277c6c23d9e7caf4`):
+Trainer AI source at the same 0.8.9 pin (`04d424d6d9dca3a8c66573f9628a9b3b6d4ccee4`):
 `src/trainerai/{main,setupStateVariables,calcDamage,calcSpeed,scoringHelper,calc,pick_command,postKO}.c`
 and `include/custom/custom_ai.h`. These read-only inputs support the headless AI port; the damage engine's
 older battle-formula evidence above remains a separate reference. Fetch missing files without replacing the
@@ -58,7 +58,7 @@ Source updates: `watch.json` (`uv run python -I tools/check_updates.py hardlove-
 
 ```bash
 D=hacks/hardlove-gold/.src
-SHA=f715235073f9a6ab91be697e277c6c23d9e7caf4   # 0.8.8; update to the commit of the release you want
+SHA=04d424d6d9dca3a8c66573f9628a9b3b6d4ccee4   # 0.8.9; update to the commit of the release you want
 R=https://raw.githubusercontent.com/kumakuma1/hardlove/$SHA
 python -I tools/drive_ls.py 1IltXECEUg7YKeUxO9K6g4bmg33NI4Wax $D
 python -I tools/mirror.py https://kumakuma1.github.io/hardlove-docs/index.html $D/site
@@ -81,10 +81,10 @@ For an update, find the release commit first: the repo has no tags, so match the
 starter nature"). `beta_hardlove` moves ahead of releases. Don't use `333sensation/hardlove`: it's an unrelated
 AI-edited copy (all species wild, 1/512 shinies). The Drive sheets have no version number, so re-download them, and
 compare them with the commits after the pin: the author edits them for the next version (0.8.8: Trainer Battles carried
-0.8.9's Ethan / Lyra, left out with `trainers.py` `SHEET_AHEAD`; Item Location carried 0.8.9's berry shop and Mega Stone
-moves, so the 2026-10-24 sheet was kept). Keep the previous sheets before re-downloading. On a pin move, delete the
+0.8.9's Ethan / Lyra, left out with `trainers.py` `SHEET_AHEAD`, empty again at 0.8.9; Item Location carried 0.8.9's berry
+shop and Mega Stone moves, so the older sheet was kept until 0.8.9). Keep the previous sheets before re-downloading. On a pin move, delete the
 AI files (`src/trainerai/*.c`, `include/custom/custom_ai.h`) before `fetch_ai.py`: it keeps files that exist. Mime Jr.'s
 page 404s on the site. The Drive's "Footage" and "Patch" subfolders are not needed. No walkthrough exists; the trainer
 sheet's split tabs give the order.
 
-Item text (`extract/item_desc.json`, the hack's own items): `data/text/221.txt` (descriptions; line 1 = Infinite Candy, line 2 = Starter Card, the ids 2685 / 2686 in `asm/include/items.inc`) and `data/text/222.txt` (names) at the pin (both in the re-fetch loop above); re-check `item_desc.json` against them when the pin moves.
+Item text (`extract/item_desc.json`, the hack's own items): `data/text/221.txt` (descriptions; line 1 = Infinite Candy, line 2 = Starter Card, the ids 2685 / 2686 in `asm/include/items.inc`) and `data/text/222.txt` (names) at the pin (both in the re-fetch loop above); the Natural Gift berries' text is `data/text/830.txt`. Re-check `item_desc.json` against them when the pin moves.

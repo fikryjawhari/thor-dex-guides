@@ -8,7 +8,7 @@ section the line names. History: git, each hack's `notes.md` → History, `templ
 | Guide | Version / mode | Family | On the Thor |
 | --- | --- | --- | --- |
 | Emerald Imperium | 1.3.1 | pokeemerald-expansion (GBA) | before the item / move pages |
-| Hardlove Gold | 0.8.8 | hg-engine (NDS) | before the item / move pages |
+| Hardlove Gold | 0.8.9 | hg-engine (NDS) | before the item / move pages |
 | Photonic Sun | 2.38 Rebalanced, EV-less | 3DS | before the item / move pages |
 | Eternal X | 2.67 Rebalanced | 3DS | before the item / move pages |
 | Blaze Black 2 Redux | 1.4.1 Complete EVless / Challenge | Drayano (NDS) | maybe not in the library yet |
@@ -48,9 +48,8 @@ from link (same library id, saved state kept).
   in the standard, the other six unchanged (domcompare: identical). Next: the guides session from the plan, each guide
   a tab branch `worktree-encounters-<hack>` off it. Phone preview: `encounters-eternal-x.html`.
 
-- **Hardlove Gold 0.8.8** (2026-11-05): merged and pushed. The Drive sheets already carry 0.8.9 dev content (Ethan /
-  Lyra, Cerulean berry shop, Mega Stone moves): on 0.8.9 drop `SHEET_AHEAD`'s entry and use the new Item Location
-  (`hacks/hardlove-gold/notes.md` → History). Update the guide on the Thor (Open 1).
+- **Hardlove Gold 0.8.9** (2026-11-06): Ethan / Lyra, Cerulean berries (Natural Gift in the calc and AI), primal weather
+  stays, AI port (`hacks/hardlove-gold/notes.md` → History, Engine changes). Update the guide on the Thor (Open 1).
 - **Pushed (2026-11-04):** one calc button per trainer, and the encounter standard on every guide. Update each guide
   on the Thor (Open 1).
 - **Calc plans done** (merged 2026-11-03): gauntlet carry (every guide with chains), Hardlove AI (odds, switch-ins,

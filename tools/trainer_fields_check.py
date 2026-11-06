@@ -32,7 +32,7 @@ def source_check(root):
     print(f'PASS Hardlove source coverage: {count} field comments retained as evidence')
 
 
-DOUBLES_EXPECTED = {'emerald-imperium': 14, 'hardlove-gold': 92, 'photonic-sun': 60, 'eternal-x': 62, 'unbound': 36,
+DOUBLES_EXPECTED = {'emerald-imperium': 14, 'hardlove-gold': 94, 'photonic-sun': 60, 'eternal-x': 62, 'unbound': 36,
                     'radical-red': 47}
 DOUBLES_PARTNER_ONLY = {'eternal-x': 12, 'unbound': 2}
 
@@ -107,6 +107,7 @@ def main():
         ('weather', 'Rain'), ('terrain', 'Electric')]
     assert all(effect['duration'] == 'permanent' for effect in thunder['effects'])
     assert trainer_fields.evidence('Permanent OW Fog.', 'trainer-note')['effects'][0]['value'] == 'Fog'
+    assert trainer_fields.evidence('Permanent extremely harsh sunlight (Desolate Land).', 'trainer-note')['effects'][0]['value'] == 'Harsh Sunshine'
     tailwind = trainer_fields.evidence('Permanent Tailwind on enemy side.', 'section-note')
     assert tailwind['effects'][0]['side'] == 'opponent'
     random = trainer_fields.evidence('Random Terrain at battle start.', 'trainer-note')

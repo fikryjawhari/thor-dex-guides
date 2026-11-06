@@ -197,14 +197,27 @@ unverified in hg-engine). Easy mode (enemy levels − (1 + floor(lv / 25))) is n
 Doubles: one `gameType: 'Doubles'` record per trainer with a Double / 2on2 Double tag or partners;
 three Back2Back trainers also carry a Double tag (Executive Ariana, Rocket Grunt #25, Kimono Girl Miki) and count as Doubles.
 `setterStays: true` (`doc/Mechanics.txt:31-32`: weather / terrain from abilities and moves are permanent), so a
-setter's weather stays after it leaves. Figy-group berries heal 1/8 at half HP (`over.items`; `TryUseHeldItem`, `itemdata.c` parameter 8). Dragon
+setter's weather stays after it leaves, primal too since 0.8.9 (`primalStays`). Figy-group berries heal 1/8 at half HP (`over.items`; `TryUseHeldItem`, `itemdata.c` parameter 8). Dragon
 Cheer is off (`over`: no crit stage at the traced pin). Weather moves set Snow (no Hail).
 
 Automatic power follows source weight/HP/speed/boost rules: inclusive weight bands, Flail's top band at
 `floor(48 * HP / maxHP) >= 32`, Gyro Ball without the additive 1, Hard Press at 1 BP at full HP and a late
 zero-power clamp. Weight overrides cover Mega Garchomp Z, Mega Lucario Z and Maushold.
 
-#### Engine changes in 0.8.5 to 0.8.8
+#### Engine changes in 0.8.5 to 0.8.9
+
+0.8.9 (`f715235073..04d424d6d9`). Damage calc: 18 berries are Natural Gift 90 BP (`itemdata.c`, the Cerulean shop's: `over.items`
+`naturalGift`, read by the engine and the AI facts; stock's table stays for every other berry; the engine now reports the
+berry's power, stock reported 1). Primal weather stays after its setter leaves (`CanClearPrimalWeather` off in subscripts
+0368 / 0369: profile `primalStays`). `battle_calc_damage.c` only moves Unnerve into `IsUnnerveActive` (As One counts, a
+switched-out or fainted Unnerve stops; `TryClearUnnerve` then lets berries fire); `CalcBaseDamage.c` is unchanged, so no
+other profile change. Natural Gift still works under Unnerve (`BeforeMove`, battle tests), as the calc does.
+Trainer AI, ported (fixtures `0.8.9: ...` in `tools/calc/hardlove_ai_check.mjs`): the AI's item read ignores Unnerve
+(`GetBattleMonItemIgnoringUnnerve`, `calc.c`), Tailwind / Trick Room are -20 when the faster partner already clicked them
+(`main.c`), post-KO percents cap at 100 (`GetCappedDamagePercent`, `postKO.c`). The post-KO fix for an empty player field
+(first valid slot instead of slot 6) is what the port already did. `calcDamage.c` is unchanged except for reading the Natural
+Gift table (damage compare: 0 unexplained). Not modelled, nothing to change: modern Encore (3 turns, the source's failure
+rules), Red Card / U-Turn, replacement order, Struggle checks. AI doc and Post-KO sheet unchanged.
 
 0.8.8 (`4a8d4a6308..f715235073`): trainer AI and two moves. Ported to `template/calc/ai/hardlove/` (fixtures `0.8.8: ...`
 in `tools/calc/hardlove_ai_check.mjs`): Encore restricts usable moves without a Choice lock (`calc.c` `IsMoveUsable`;
@@ -287,7 +300,7 @@ User-supplied notes agree with `doc/Mechanics.txt:5-34`.
 | Battle Bond | Manually select +1 Atk and +1 Spe after KO, no SpA: `data/battle_scripts/subscripts/subscript_0515_BATTLE_BOND_BOOST.s:11-16`. No automatic post-KO simulation. |
 | Snow | Gen 9 Snow (no Hail): Ice physical Defense x1.5, not SpD, `src/individual/CalcBaseDamage.c:1400-1408`. |
 | Fields | Existing Gen 9 fields retained; add per-side Flower Gift, Power Trick, Protect using existing renderer/native engine. Importer's limited field list is not an availability specification. |
-| Permanent fields | Setter and area weather / terrain stay (`setterStays`); no countdown or Defog simulation. |
+| Permanent fields | Setter and area weather / terrain stay (`setterStays`; primal: `primalStays`); no countdown or Defog simulation. |
 | Moody / sleep / OHKO | Accuracy/evasion randomness, sleep duration and OHKO chance/level checks are outside damage simulation. Current sleep status and manual stat stages remain usable. |
 | Return / Frustration | Power from happiness (`CalcBaseDamage.c:211-215`, integer `*10/25`); the user types the power (`expansion` varpow), so the calc takes the typed value. Fixtures: `frustration-happiness-127`, `frustration-happiness-0`, `return-happiness-127`. |
 | Rage Fist | Flat data power 100 (sheet's +50 per hit taken not modelled): no hit-taken counter is in the source (only the punch list, `other_battle_calculators.c:441`). Fixtures: `rage-fist-flat-100`, `rage-fist-normal-target-immune`. |
@@ -727,6 +740,23 @@ earlier data.json, that species order, move / ability tables, area names, traine
 
 ## History
 
+- **2026-11-06, 0.8.9.** Pinned `04d424d6d9` (2026-11-05 19:25 UTC "merge", the head; the patch went up 2026-11-05 11:11 Drive
+  time, about 19:11 UTC, and this merge only changes battle-test text from `79e25d0` 18:51 UTC, so the game is the same; it
+  has the in-game version text 0.8.9). Game changes in the data: new trainer Pokémon Trainer Ethan / Lyra (Olivine City,
+  key `t330`, game ids 313 Ethan / 572 Lyra, the same team: Weavile, Tapu Fini, Yanmega, Toedscruel, Mega Dragalge,
+  Azumarill; gives Dragalgite), Corphish / Crawdaunt learnsets, Corphish evolves at 28, Whirl Islands 1F Old Rod Clawitzer
+  (was Clauncher), B2F Golurk (was Mudsdale), trainer fixes (Grunt #36 Luxray Guts, Archer's Exeggutor Sleep Powder, Ace
+  Trainer Joyce, Kimono Girl Naoko). Sheet note: Archer "Permanent extremely harsh sunlight (Desolate Land)" (his lead is
+  Primal Groudon): `trainer_fields.py` makes it a locked Harsh Sunshine. Item Location (identical to the 2026-11-05 copy held
+  back at 0.8.8) is in: the Cerulean Mart sells 18 berries (second table in Held Items, `"` ditto, the Natural Gift type in
+  the shop line, `item_desc.json` text from `data/text/830.txt`), Clefablite is now Dark Cave, Golisopite Rodney's reward,
+  Dragalgite Ethan / Lyra's (its Victory Road 2F ball is a Nugget, which the sheet doesn't list). `SHEET_AHEAD` is empty;
+  Trainer Battles 2026-11-06 is back in step with the code. Mycelium Might joins `AB` and Toedscruel and Tapu Fini `P`
+  (trainer-only), so later `AB` indices moved: calc fixtures remapped by name; `M` unchanged. Pickup keys `p213` (Dragalgite)
+  and `p226` (Golisopite) match nothing now: those stones moved, a tick on them goes with the old place; the new places have
+  new keys. Patch notes with no data change: wild Pyroar always male and Deerling's random form (the guide already lists
+  one wild `pyroar` row), catch rates and egg groups of hack-only forms (not shown). Sheet conflicts 62 -> 61. Engine / AI:
+  Damage calc -> Engine changes.
 - **2026-11-05, 0.8.8.** Pinned `f715235073` (2026-11-02 15:37 UTC "overhaul trainer", with ee6ccbe "small ai edits /
   alluring voice"; the patch is dated 2026-11-02 Pacific and was seen 2026-11-03 in the user's time zone, so after this
   commit; neither commit bumps the in-game version text, still 0.8.7; the next commit, cca6bdf 2026-11-04, sets 0.8.9).

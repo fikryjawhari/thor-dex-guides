@@ -110,6 +110,8 @@ def evidence(text, scope):
     if re.search(r'\bPermanent OW Thunderstorm:\s*Rain and Electric Terrain\b', text, re.I):
         add('weather', 'Rain', duration='permanent')
         add('terrain', 'Electric', duration='permanent')
+    if re.search(r'\bPermanent extremely harsh sunlight\b', text, re.I):   # Hardlove 0.8.9: Archer's lead Primal Groudon
+        add('weather', 'Harsh Sunshine', duration='permanent', locked=True)
     if re.search(r'\bPermanent(?: OW)? Misty Terrain\b', text, re.I):
         add('terrain', 'Misty', duration='permanent')
     if re.search(r'\bPermanent(?: OW)? Trick Room\b', text, re.I):

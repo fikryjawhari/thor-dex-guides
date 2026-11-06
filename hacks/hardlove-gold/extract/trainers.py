@@ -8,8 +8,7 @@ from extractlib import split_name
 
 
 # Sheet trainers the pinned game doesn't have yet (the Drive sheet runs ahead of the release): left out of TR and P,
-# reported in the build report. Remove a name once the pin has that trainer. Ethan / Lyra (Olivine): sheet
-# 2026-11-03, in the game from cca6bdf (0.8.9 dev; at 0.8.8 the sheet's id 214 is Sailor Roberto).
+# reported in the build report. Remove a name once the pin has that trainer. Empty since 0.8.9 (0.8.8 held Ethan / Lyra).
 SHEET_AHEAD = set()
 
 

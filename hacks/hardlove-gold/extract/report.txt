@@ -137,10 +137,6 @@ items: walkthrough rows matched to an Items line at the same place: 0
 items: walkthrough rows added as IT lines: 0
 items: walkthrough rows kept apart from a line at the same place (unsure): 0
 items: lines relabelled from what they say: none
-pickup keys: 3 new keys
-  p307: Clefablite (Dark Cave)
-  p308: Dragalgite (Lighthouse)
-  p309: Golisopite (Victory Road 1F)
 pickup keys: 2 table entries no pickup matched
   p213: Dragalgite (Victory Road 1F)
   p226: Golisopite (Dark Cave)

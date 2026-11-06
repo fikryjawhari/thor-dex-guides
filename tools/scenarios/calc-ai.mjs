@@ -50,6 +50,11 @@ if(enabled)checks.push({
   assert.equal(await page.count('.dres.na .aicol'),0,'no columns in the player result column');
   assert.equal(await page.count('.mr.st .aicol'),2,'status rows have columns');
   assert.equal(await page.value('CALC.ai.input().attacker.facts.firstTurnOut'),true,'first turn defaults on');
+  if(guide().data.cfg.calc.over.items?.['Razz Berry']?.naturalGift){
+    const held=await page.value(`CALC.set('foe','i','Razz Berry');CALC.render();(({naturalGiftType,naturalGiftPower})=>({naturalGiftType,naturalGiftPower}))(CALC.ai.input().attacker.facts)`);
+    assert.deepEqual(held,{naturalGiftType:'Normal',naturalGiftPower:90},'the AI reads the Natural Gift berry table of the hack');
+    await page.value(`CALC.set('foe','i','');CALC.render()`);
+  }
   await page.value(`CALC.ai.setFacts('foe',{lastUsedMove:'Tackle',encoredTurns:2});CALC.render()`);
   const locked=await compare(page);assert.equal(locked.moves[0].percent,100,'Encore hook is ready for 3b');assert.equal(locked.moves[0].score,'Lock');
   await page.value(`CALC.ai.setFacts('foe',{encoredTurns:0,tauntTurns:2});CALC.render()`);

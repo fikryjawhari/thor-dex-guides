@@ -276,7 +276,7 @@ run `uv run python -X utf8 -I tools/check_updates.py [hack]`; its pins and cover
 | Blaze Black 2 Redux | v1.4.1 | 2026-10-18 (docs), 2026-10-19 (RomHackDex), 2026-10-29 hzla pins | 2026-10-29 | Drayano's Drive (Documentation folder), RomHackDex, hzla Dynamic-Calc-Decomps |
 | Emerald Imperium | v1.3 / 1.3.1 | 2026-10-18 (guide built from the same sources) | 2026-10-02 | emeraldimperium.info Drive folder; eidex and Dynamic-Calc-Decomps repos |
 | Eternal X | v2.67 | 2026-10-18 (docs + romfs), dex extract 2026-10-19, regenerated + Bulbapedia 2026-10-22 | 2026-10-22 | Buffel Saft's Drive, PokeCommunity thread |
-| Hardlove Gold | 0.8.8 (source `kumakuma1/hardlove` `f715235073`; docs site `bb5862f` is older) | 2026-11-05 (source + Drive docs; Item Location kept at 2026-10-24; site / Showdown retained) | 2026-11-05 | `kumakuma1/hardlove` branch `beta_hardlove` commits, the changelog, Drive sheets |
+| Hardlove Gold | 0.8.9 (source `kumakuma1/hardlove` `04d424d6d9`; docs site `bb5862f` is older) | 2026-11-06 (source + Drive docs; site / Showdown retained) | 2026-11-06 | `kumakuma1/hardlove` branch `beta_hardlove` commits, the changelog, Drive sheets |
 | Heartfelt Gold (was HeartGold Retiled) | v1.0.0 (tag `heartfelt-v1.0.0` `8b6aa3a`) | 2026-11-01 (guides + Retiled's engine overlay; ability text from hg-engine `61b510c`) | – | GitHub repo releases / tags |
 | Meissa Moon | v2.2.2 | 2026-10-18 (docs), 2026-10-19 (romfs) | – | Author's Drive, PokeCommunity thread |
 | Navy Sapphire | v2.1.5 | 2026-10-18 (docs), 2026-10-19 (romfs) | – | Hack's Drive, PokeCommunity thread |
