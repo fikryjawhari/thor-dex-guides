@@ -116,10 +116,11 @@ Write a family's first guide with its siblings in mind; lift shared code when th
    `tools/item_text.py`, or `P.hi` odds yet (`.agents/references/new-guide.md` step 2 lists them).
 6. **T3 worktree setup hook** (the user, in T3's project settings; sessions can't change them): a project script
    `python -I tools/worktree_setup.py`, icon Configure, run on worktree create. Until then run it by hand (CLAUDE.md → Git).
-7. **Source updates** (`uv run python -I tools/check_updates.py`; last full pass 2026-11-01, Hardlove 0.8.7 on
-   2026-11-02): SoulGold's data files changed since 2026-10-24 (Mega Lopunny innates, Clefable / Mega Clefable and
-   Unown learnsets, ability usage): re-fetch before its guide. hzla's live `decomp` branch differs from Unbound's pin
-   in `gen789.js` (an Electromorphosis fix; pin kept).
+7. **Source updates** (`uv run python -I tools/check_updates.py`; last full pass 2026-11-06, with Hardlove 0.8.9):
+   SoulGold's data files changed since 2026-10-24 (re-fetch before its guide). hzla's live `decomp` branch differs from
+   Unbound's pin in `gen789.js` (pin kept). Heartfelt Gold is at 1.0.7 (sources at 1.0.0; no guide yet). Emerald
+   Imperium's 1.3.1 Changes sheet has a new date (2026-11-02) but identical cells, and the hzla diff is an unrelated
+   alias, so its guide needs nothing; state not accepted, so the check still reports it.
 8. **Small data leftovers:** item icons missing (no pinned art): Unbound 19 (key items, Costume Box), Radical Red
    17, Hardlove 1 (Pokégear Upgrade 1), BB2R 1; tutor cards are
    parsed from each row's " · " text (structured tutor fields from the extracts would be sturdier); a `nomerge` flag
