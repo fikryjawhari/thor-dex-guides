@@ -3,7 +3,7 @@
 Baselines use git archive: only committed files reach the build, no checkout or
 Git worktree registration changes, and no raw sources are needed.
 Browser checks (domcompare, consistency, walk-state, the mockup checks, scenarios) run --jobs N at once
-(default 8); a check that fails in the pool is rerun alone once, and passes then only as a timing flake.
+(default 7); a check that fails in the pool is rerun alone once, and passes then only as a timing flake.
 Result cache: a browser check that passed is skipped while its inputs are byte-identical (the guide's dist and
 JSON files, the check script and what it imports, the template parts it can reach, fixtures, the frame, Chrome and Node): one cache
 in the main checkout's .tmp/check-cache, shared by every worktree. --fresh ignores it (still records passes).

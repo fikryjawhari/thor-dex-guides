@@ -22,7 +22,8 @@ const checks=[{
     else{
       const lists=await page.value(`[...document.querySelectorAll('.dres')].map(list=>Math.max(...[...list.querySelectorAll('.mr')].map(row=>row.getBoundingClientRect().bottom)))`);
       assert.equal(lists.length,2,'both move lists');
-      for(const bottom of lists)assert(bottom<=height+1&&height-bottom<=4,'both move lists end at the viewport bottom (4 px margin): '+JSON.stringify(lists)+' / '+height);
+      // The foe's panel is locked at six rows (template/README.md): the lists end level, inside the window; a taller window shows the page below.
+      assert(Math.abs(lists[0]-lists[1])<=1&&Math.max(...lists)<=height+1,'both move lists end level, inside the window: '+JSON.stringify(lists)+' / '+height);
       assert(geometry.fight.bottom<=Math.min(...geometry.moves.map(rect=>rect.top)),'fight bar above the moves (wide left column)');
       if(height===424){assert.equal(geometry.team,'visible','preview does not scroll: all six rows visible (two-line rows)');assert(await page.value(`[...document.querySelectorAll('.fteam .ft')].every(row=>row.getBoundingClientRect().bottom<=innerHeight)`),'all six preview rows inside the window');assert.equal(geometry.preview.length,6,'all six full preview rows');assert(geometry.preview.every(row=>row.parts===1&&row.text.length>20),'item / ability line and move line in every row');}
     }

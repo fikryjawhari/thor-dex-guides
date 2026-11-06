@@ -199,7 +199,7 @@ no resize); one that takes more moves Aura up (the ability / Speed line, or afte
 rarest tag and about stages), then the battle state the same way, then goes tight (1 px gaps, Aura as "A"). No name line while Edit is open; an open card
 spans both columns. Lv sits on the team cell (the Lv box only in Edit). No Intimidate mark on any card: the holder's box is the only sign. **Wide (≥ 480):** left column = box panel with my team row under the grid (1 px line), then the fight bar; right
 column = the trainer panel, whose preview (two-line rows, 25 px, all six always visible, no scrolling; tap = pick that
-foe) is the foe's team (no strip); the cards (named, ~48 px) and both move lists pinned to the bottom of the window.
+foe) is the foe's team (no strip); the cards (named, ~48 px) and both move lists under them, ending level (the foe panel is locked, above).
 Jump arrows (`CALC.stops()`): top, the first frame (trainer bar − 2, narrow), the fourth move's bottom when an open row
 or editor pushes it ≥ 24 px past that, and Field (always, clamped); stops within 24 px merge.
 Field's open box (capped to the window by `fitToggles`) and the box grid scroll inside but pass the wheel / drag on

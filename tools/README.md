@@ -19,7 +19,7 @@ it on a bare runner. `pdftotext` (Git for Windows ships it) is also used.
 | Script | What it does |
 | --- | --- |
 | `new_hack.py <hack> --like <built hack> [--title name] [--version N] [--ls-prefix prefix] [--dry-run] [--force]` | Stdlib scaffold: config, notes / source headings, empty sprites, extract modules / check, gate rebuild and calc scenario / engine-check stubs. No data or other hack's mechanics / fixtures; calc off. Details below. |
-| `gate.py baseline [ref]` / `check [hack ...] [--data] [--template] [--jobs N] [--fresh] [--accept-data S] [--accept-routes S]` / `lint [--fix]` / `scenarios [hack ...] [--only a,b] [--jobs N] [--fresh]` | Captures committed HTML/data/reports at a ref; rebuilds data, then runs every browser check (DOM, consistency, walk-state, mockup checks, scenarios) on every named guide, N at a time (default 8), failures rerun alone, passes cached by content. `scenarios` runs only `scenarios/` on the built dist (no rebuild or baseline), `--only` some of them by name. Stdlib orchestration; run with `uv run python -I`. Standard gates below. |
+| `gate.py baseline [ref]` / `check [hack ...] [--data] [--template] [--jobs N] [--fresh] [--accept-data S] [--accept-routes S]` / `lint [--fix]` / `scenarios [hack ...] [--only a,b] [--jobs N] [--fresh]` | Captures committed HTML/data/reports at a ref; rebuilds data, then runs every browser check (DOM, consistency, walk-state, mockup checks, scenarios) on every named guide, N at a time (default 7), failures rerun alone, passes cached by content. `scenarios` runs only `scenarios/` on the built dist (no rebuild or baseline), `--only` some of them by name. Stdlib orchestration; run with `uv run python -I`. Standard gates below. |
 | `worktree_setup.py [hack ...] [--session name] [--release]` | Claims a worker checkout, links `.src/` and the main checkout's `.tmp/item-icons/` cache when present (Windows junctions, no copying), then `uv sync`, and `npm ci` for `tools/calc` when its lockfile is there but `node_modules` isn't (log `.tmp/worktree-setup-npm.log`); no hacks means every built guide. Refuses other claims or existing source/cache copies. Release removes only the matching claim. |
 | `scenarios/tracker-reload.mjs <guide.html>` | Seeded tracker state, Clear and reload at 260 × 316 in `dvkb`; assertions on the control and saved state. `scenarios/README.md` describes new spec checks. |
 | `scenarios/calc-*.mjs <guide.html>` | Calc page checks: layout, controls, state, import/bridge, mechanics and per-hack fields. Coverage, sizes and failure output: `scenarios/README.md` → Calc checks. |
@@ -195,8 +195,8 @@ trainer cards, item rows and walkthrough stops. Stamp-only rebuilds restore the 
 
 Template checks assemble every guide, then queue every browser check for each selected guide: domcompare
 normal / keyboard against the baseline, consistency, keyed-stop migration, the four mockup checks in both modes and
-every `scenarios/*.mjs`; tabs runs inline. The queue runs `--jobs` at a time (default 8, measured fastest on this
-16-thread PC), domcompare and jumpcheck first (the longest). A check that fails in the pool is rerun alone at the
+every `scenarios/*.mjs`; tabs runs inline. The queue runs `--jobs` at a time (default 7: 14 of this PC's 16 threads, the most it
+stays usable at), domcompare and jumpcheck first (the longest). A check that fails in the pool is rerun alone at the
 end: passing then, it counts as a pass and the summary lists it as FLAKY (timing under load); failing again, it fails.
 Mockup tools that only print diagnostics are treated as failures on page errors, bad jumps or wrong route bars;
 their detailed geometry output remains a review log, not an invented assertion. Logs: `.tmp/gate/<run>/`, with
